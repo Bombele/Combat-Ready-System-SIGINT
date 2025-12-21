@@ -1,0 +1,38 @@
+📜 Military License – ELINT/SIGINT System
+
+1. Purpose
+This license governs the use, deployment, and transmission of the ELINT/SIGINT system developed under institutional mandate. It defines the rights, obligations, and restrictions applicable to armed forces and authorized partners.
+
+2. Ownership
+The system is the intellectual and institutional property of ITCAA/FINSIG, represented by its mandated architect. Any use is conditioned upon acceptance of this license.
+
+3. Authorized Users
+- National armed forces and their operational units.  
+- Institutional auditors and controllers officially mandated.  
+- Strategic partners validated by contract.  
+
+4. Granted Rights
+- Operational use: collection, processing, and analysis of electromagnetic signals within the legal framework.  
+- Field deployment: installation on mobile/tablet devices, SDR gateways, and command centers.  
+- Auditability: export of signed reports, immutable logs, and trilingual bitácoras.  
+- Institutional transmission: documentation and guides for continental adoption.  
+
+5. Restrictions
+- Prohibition of unauthorized civilian or commercial use.  
+- Prohibition of decoding outside the legal perimeter (private communications, protected data).  
+- Prohibition of source code modification without institutional validation.  
+- Prohibition of transfer to non‑mandated third parties.  
+
+6. Compliance and Audit
+- Each deployment must be accompanied by a signed mission bundle (RF profiles, OPA policies, RBAC keys).  
+- Logs must be preserved and verified by internal auditors.  
+- Exports must be sealed and archived according to institutional standards.  
+
+7. Liability
+- The holder guarantees technical compliance and system auditability.  
+- The user is responsible for legal and institutional use.  
+- Any violation results in immediate suspension of the license.  
+
+8. Duration and Revocation
+- License granted for the duration of the military or institutional mandate.  
+- Revocable in case of non‑compliance, misuse, or unauthorized transfer.  
