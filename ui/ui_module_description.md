@@ -24,8 +24,16 @@ Ce module garantit la cohérence visuelle, l’accessibilité et la conformité 
 - **desktop_index.md** → documentation desktop.
 
 ### assets/
-- **icons/** → icônes institutionnelles.
-- **styles/** → feuilles de style (CSS, thèmes).
+- **icons/** → bibliothèque d’icônes institutionnelles :
+  - **system/** → icônes système (add, delete, edit, settings).
+  - **signals/** → icônes SIGINT (radar, voice, telemetry, spectrum).
+  - **compliance/** → icônes conformité (audit, badge, report).
+  - **icons_index.md** → documentation indexée des icônes.
+- **styles/** → feuilles de style et thèmes :
+  - **themes/** → thèmes institutionnels (light.css, dark.css, audit.css).
+  - **components/** → styles pour composants UI (signal_chart.css, emitter_card.css, compliance_badge.css).
+  - **layouts/** → styles pour mise en page (dashboard.css, capture.css, analysis.css).
+  - **styles_index.md** → documentation indexée des styles.
 - **assets_index.md** → documentation des ressources.
 
 ### ui_index.md
