@@ -1,6 +1,7 @@
 # SIGINT Combat-Ready System
 
 ## 🎯 Objectif
+
 Ce projet évolue d’une **ossature logicielle auditable** vers un **système de renseignement de combat opérationnel**, conçu pour les FARDC et adapté aux environnements hostiles (connectivité limitée, diversité des équipements, menaces asymétriques).
 
 ---
@@ -28,6 +29,24 @@ Ce projet évolue d’une **ossature logicielle auditable** vers un **système d
 - **Rapports compressés (Burst Transmission)** : CBOR/Zstd pour envoi via Starlink/Iridium.
 - **Auditabilité** : chaque transmission est journalisée et signée.
 
+### 6. Résilience – Multi‑canal fallback
+- **Objectif** : garantir la transmission même en cas de perte totale de réseau.  
+- **Implémentations** : SMS chiffré (AES + Base64), HF analogique (FSK simple), priorisation des données critiques.  
+- **Institutionnalisation** : profil “Fallback Mode” documenté dans `specs/operational_spec.md` avec SOP associée.
+
+### 7. IA locale – Détection d’anomalies
+- **Objectif** : identifier automatiquement les comportements radio suspects.  
+- **Implémentations** : module `AnomalyDetector.kt` dans `services/dsp/ai_inference/`, algorithmes légers (Isolation Forest, autoencoder TFLite).  
+- **Exemples** : burst inhabituel, modulation rare, fréquence hors plage normale.  
+- **Institutionnalisation** : enrichir `data/signatures/` avec anomalies typiques et documenter dans `docs/reports/anomaly_report.md`.
+
+### 8. Institution – SOP & Certification
+- **Objectif** : rendre le système transmissible et utilisable par les FARDC avec crédibilité internationale.  
+- **Implémentations** :  
+  - SOP dans `docs/SOP/` pour chaque module (capture, fusion_geo, mesh, transmission).  
+  - Certification progressive alignée avec normes OTAN/ITU.  
+  - Formation opérateurs avec manuels simplifiés et simulateurs.
+
 ---
 
 ## 🗺️ Roadmap d’évolution
@@ -38,6 +57,10 @@ Ce projet évolue d’une **ossature logicielle auditable** vers un **système d
 | Phase 2 : Fusion | TDOA / Géolocalisation | Corrélation multi-opérateurs pour localisation précise |
 | Phase 3 : IA | Classification Auto | Identification automatique des menaces |
 | Phase 4 : Transmission | SatCom / Burst | Rapports compressés via Starlink/Iridium |
+| Phase 5 : Sécurité | Panic wipe & boot vérifié | Protection contre compromission physique |
+| Phase 6 : Résilience | Multi-canal fallback | SMS chiffré / HF analogique |
+| Phase 7 : IA locale | Détection anomalies | Identification trafic suspect |
+| Phase 8 : Institution | SOP & certification | Normes OTAN/ITU, formation opérateurs |
 
 ---
 
@@ -48,7 +71,8 @@ Ce projet évolue d’une **ossature logicielle auditable** vers un **système d
 - **Résilience** : cyber_resilience/ et GeofenceManager garantissent continuité et sécurité.  
 - **Transmission continentale** : documentation homogène et certifiable.  
 - **Opérabilité terrain** : Edge computing, mesh, DF, signatures locales.  
+- **Institutionnalisation** : SOP et certification internationale pour adoption par les FARDC et partenaires.  
 
 ---
 
-✅ Ce README positionne ton projet comme une **architecture SIGINT combat-ready**, prête pour déploiement opérationnel et certification institutionnelle.
+✅ Ce README positionne ton projet comme une **architecture SIGINT combat-ready**, prête pour déploiement opérationnel, certification institutionnelle et adoption continentale.
