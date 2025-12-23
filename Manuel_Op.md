@@ -205,7 +205,7 @@ Si l’opérateur sort du périmètre défini, le TacticalWipeManager déclenche
 
 ### Procédures de test
 Script Kotlin rapide :
-```kotlin
+kotlin
 fun main() {
     GeofenceManager.loadGeofence("core/security/active_geofence.poly")
 
@@ -239,7 +239,7 @@ Toute modification ou suppression brise la chaîne et est immédiatement détect
    - Retourne false si une falsification est détectée.
 
 ### Exemple d’utilisation
-```kotlin
+kotlin
 MissionLogger.info("SIGINT capture: fréquence 29.222 MHz")
 MissionLogger.critical("WIPE_TRIGGERED: sortie de zone Goma")
 val integrityOk = MissionLogger.verifyIntegrity()
@@ -313,12 +313,65 @@ Le module SignalClassifier utilise TensorFlow Lite pour classifier automatiqueme
 - Auditabilité : chaque détection est enregistrée et vérifiable.
 - Interopérabilité : résultats intégrés dans MeshSyncEngine pour diffusion immédiate.
 
-## 12. Annexes – Glossaire, Index système, Changelog
+## 12. Modes opérationnels – SIGINT Combat-Ready
+
+Ce chapitre regroupe tous les profils de mission disponibles dans le système SIGINT combat-ready.
+Chaque mode est conçu pour répondre à un contexte opérationnel spécifique et active/désactive des modules précis.
+
+### 🔒 Fallback Mode
+- Objectif : Assurer la transmission même en cas de perte totale de réseau.
+- Modules actifs :
+  - core/sync/MeshSyncEngine.kt
+  - services/transmission/FallbackTransmitter.kt
+- SOP associée : docs/SOP/transmission_SOP.md
+
+### 🔋 Low-Power Mode
+- Objectif : Économiser l’énergie en mission longue durée.
+- Modules actifs :
+  - core/power/LowPowerManager.kt
+  - ui/tactical/NightVisionTheme.kt
+- SOP associée : docs/SOP/power_SOP.md
+
+### 🕶️ Silent Ops Mode
+- Objectif : Opérations discrètes, minimiser les traces numériques et visuelles.
+- Modules actifs :
+  - ui/tactical/LowLightRenderer.kt
+  - core/audit/MissionLogger.kt (journal minimal)
+- SOP associée : docs/SOP/silent_ops_SOP.md
+
+### 📑 Evidence Mode
+- Objectif : Collecte et traçabilité renforcée pour débriefing et certification.
+- Modules actifs :
+  - core/audit/MissionLogger.kt (journal complet chiffré et signé)
+  - data/reports/anomaly_report.md
+- SOP associée : docs/SOP/evidence_SOP.md
+
+### 🛰️ Fusion & Géolocalisation Mode
+- Objectif : Localiser précisément un émetteur ennemi par triangulation.
+- Modules actifs :
+  - comint/geo/TDOA_Engine.kt
+  - fusion_geo/
+- SOP associée : docs/SOP/fusion_geo_SOP.md
+
+### 🤖 IA Locale – Anomaly Detection Mode
+- Objectif : Identifier automatiquement les comportements radio suspects.
+- Modules actifs :
+  - services/dsp/ai_inference/AnomalyDetector.kt
+  - data/signatures/anomalies.json
+- SOP associée : docs/SOP/anomaly_SOP.md
+
+### Valeur opérationnelle (FARDC)
+- Flexibilité : chaque mode correspond à un profil de mission spécifique.
+- Institutionnalisation : modes documentés et reliés aux SOP pour adoption officielle.
+- Sécurité : Evidence Mode et Silent Ops renforcent la traçabilité et la discrétion.
+- Résilience : Fallback Mode et Low-Power Mode assurent continuité même en conditions dégradées.
+
+## 13. Annexes – Glossaire, Index système, Changelog
 
 ### Glossaire
-- SIGINT : Signals Intelligence (renseignement d’origine électromagnétique).
+- SIGINT : Signals Intelligence (renseignement électromagnétique).
 - ELINT : Electronic Intelligence (renseignement électronique).
-- Evidence Mode : mode de journalisation inviolable basé sur hachage enchaîné.
+- Evidence Mode : journalisation inviolable basée sur hachage enchaîné.
 - TacticalWipeManager : module déclenchant l’effacement automatique des données sensibles.
 - ThreatMessage : format standardisé pour transmettre alertes et données via MeshSyncEngine.
 - MeshSyncEngine : moteur de communication maillée basé sur Wi-Fi Direct.
@@ -348,4 +401,5 @@ Le module SignalClassifier utilise TensorFlow Lite pour classifier automatiqueme
 - v1.4 : Ajout WifiDirectAdapter (communication mesh).
 - v1.5 : Ajout SignalClassifier + AnomalyDetector (IA embarquée).
 - v1.6 : Mise à jour Architecture et SOP avec modules data, services, ui, tests.
-- v1.7 : Ajout Annexes (Glossaire, Index système, Changelog).
+- v1.7 : Ajout Modes opérationnels.
+- v1.8 : Annexes (Glossaire, Index système, Changelog).
