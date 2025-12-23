@@ -31,3 +31,17 @@ object GeofenceManager {
     }
 }
 
+fun main() {
+    // Initialisation
+    GeofenceManager.loadGeofence("core/security/active_geofence.poly")
+
+    // Test 1 : Position au centre de Goma (devrait être INSIDE)
+    val inGoma = GeofenceManager.isInAuthorizedZone(-1.6666, 29.2222)
+    println("Position Goma Centre : ${if (inGoma) "AUTORISÉE" else "ALERTE WIPE"}")
+
+    // Test 2 : Position à Sake (devrait être OUTSIDE)
+    val inSake = GeofenceManager.isInAuthorizedZone(-1.6067, 29.0722)
+    println("Position Sake (Hors Zone) : ${if (inSake) "AUTORISÉE" else "ALERTE WIPE"}")
+}
+
+
