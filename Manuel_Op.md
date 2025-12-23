@@ -465,40 +465,167 @@ Ce mode permet une détection proactive des transmissions anormales, réduisant 
 - Sécurité : Evidence Mode et Silent Ops renforcent la traçabilité et la discrétion.
 - Résilience : Fallback Mode et Low-Power Mode assurent continuité même en conditions dégradées.
 
-## 13. Annexes – Glossaire, Index système, Changelog
+## 13. Modes de combat opérationnel – Implémentation
 
-### Glossaire
-- SIGINT : Signals Intelligence (renseignement électromagnétique).
-- ELINT : Electronic Intelligence (renseignement électronique).
-- Evidence Mode : journalisation inviolable basée sur hachage enchaîné.
-- TacticalWipeManager : module déclenchant l’effacement automatique des données sensibles.
-- ThreatMessage : format standardisé pour transmettre alertes et données via MeshSyncEngine.
-- MeshSyncEngine : moteur de communication maillée basé sur Wi-Fi Direct.
-- Internal DoS : mécanisme de corruption et saturation interne pour rendre l’appareil inutilisable.
-- Geofence : périmètre géographique autorisé pour l’utilisation du système.
-- ZeroTrust : modèle de sécurité où chaque transaction est validée cryptographiquement.
+Le système SIGINT combat-ready repose sur plusieurs modes opérationnels, chacun conçu pour répondre à un contexte tactique précis.  
+Ces modes constituent la doctrine d’emploi du système et garantissent flexibilité, sécurité et efficacité sur le terrain.
 
-### Index système
-- core/ : moteur central, sécurité, gestion des flux.
-- sigint/ : capture et classification des signaux.
-- infra/ : transmission sécurisée, cyber résilience.
-- specs/ : documentation technique et matrices de conformité.
-- docs/ : SOP, manuels opérateurs, rapports institutionnels.
-- data/ : signatures radio, bases de menaces, cartes offline.
-- services/ : IA embarquée (SignalClassifier, AnomalyDetector), DSP.
-- integration/ : interfaces inter-systèmes.
-- tests/ : scénarios de validation (panic wipe, geofence).
-- ui/ : interface opérateur (StatusHUD).
-- SIGINT_System_Manual.md : manuel technique.
-- manuel_op : manuel opérationnel (ce document).
+---
 
-### Changelog
-- v1.0 : Initialisation du manuel (Introduction, Architecture, SOP).
-- v1.1 : Ajout SensitiveStore (Internal DoS).
-- v1.2 : Ajout GeofenceManager (sécurité géographique).
-- v1.3 : Ajout MissionLogger (Evidence Mode).
-- v1.4 : Ajout WifiDirectAdapter (communication mesh).
-- v1.5 : Ajout SignalClassifier + AnomalyDetector (IA embarquée).
-- v1.6 : Mise à jour Architecture et SOP avec modules data, services, ui, tests.
-- v1.7 : Ajout Modes opérationnels.
-- v1.8 : Annexes (Glossaire, Index système, Changelog).
+### ### 🔒 Mode Panic Wipe – Détail complet
+
+#### Objectif
+Le Mode Panic Wipe est conçu pour protéger immédiatement toutes les données sensibles du système SIGINT en cas de compromission.  
+Il s’active automatiquement lorsque l’unité sort de la zone géographique autorisée, lorsqu’une clé de détresse est saisie par l’opérateur, ou lorsqu’un sabotage matériel est détecté.  
+Son rôle est de garantir qu’aucune information stratégique ne puisse tomber entre les mains adverses.
+
+#### Modules associés
+- **TacticalWipeManager.kt** : cœur du mécanisme d’effacement, orchestre la suppression des données et des clés.  
+- **GeofenceManager.kt** : vérifie la position de l’unité par rapport au périmètre défini dans `active_geofence.poly`.  
+- **KeyVault** : gère et détruit les clés cryptographiques (master.key, session.key).  
+- **SensitiveStore** : efface les répertoires critiques (signatures radio, rapports, journaux).  
+- **MissionLogger.kt** : journalise chaque déclenchement et résultat du wipe en mode Evidence.
+
+#### Procédures de déclenchement
+1. **Sortie de zone (Geofence)** : si l’opérateur franchit le périmètre défini, le wipe est déclenché.  
+2. **Clé de détresse** : saisie manuelle par l’opérateur en cas de capture imminente.  
+3. **Tamper matériel** : détection d’une tentative de sabotage ou d’ouverture non autorisée du dispositif.  
+
+#### SOP associée
+- **docs/SOP/panicwipeSOP.md** : décrit les étapes d’activation, les tests de déclenchement et les vérifications post-effacement.  
+- Inclut les scénarios de simulation pour valider la robustesse du mécanisme.
+
+#### Valeur opérationnelle (FARDC)
+- **Neutralisation immédiate** : aucune donnée exploitable ne subsiste après déclenchement.  
+- **Sécurité stratégique** : protège les bases de signatures, clés et rapports sensibles.  
+- **Traçabilité** : chaque effacement est enregistré dans MissionLogger pour audit et certification.  
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT est encerclée et risque d’être capturée.  
+- **Action** : l’opérateur saisit la clé de détresse.  
+- **Résultat** : TacticalWipeManager efface immédiatement les clés, les signatures et les rapports, journalise l’événement, puis neutralise le système.
+
+---
+
+### 📑 Mode Evidence – Détail complet
+
+#### Objectif
+Le Mode Evidence est conçu pour assurer une traçabilité inviolable et certifiable de toutes les opérations critiques.  
+Il garantit que chaque événement, chaque effacement et chaque détection est enregistré de manière sécurisée, chiffrée et signée.  
+Ce mode est essentiel pour les missions où la preuve et l’auditabilité doivent être garanties, que ce soit pour un débriefing militaire, une certification institutionnelle ou une présentation devant un tribunal.
+
+#### Modules associés
+- **MissionLogger.kt** : journal complet basé sur hachage enchaîné et signature cryptographique.  
+- **data/reports/anomaly_report.md** : rapport automatique des anomalies détectées, intégré dans la documentation pour audit.  
+- **SensitiveStore & KeyVault (hooks)** : assurent que les effacements sont également tracés et certifiés.  
+
+#### Procédures de fonctionnement
+1. **Journalisation complète** : chaque événement est enregistré avec un horodatage et un hash lié au précédent.  
+2. **Signature cryptographique** : chaque entrée est signée pour empêcher toute falsification.  
+3. **Rotation des logs** : gestion automatique des fichiers pour éviter la surcharge et garantir la continuité.  
+4. **Rapports d’anomalies** : intégration automatique des détections IA et des événements critiques dans les rapports.  
+
+#### SOP associée
+- **docs/SOP/evidence_SOP.md** : décrit les procédures pour activer le mode Evidence, vérifier l’intégrité des journaux et transmettre les rapports chiffrés à l’état-major ou aux instances de certification.  
+
+#### Valeur opérationnelle (FARDC)
+- **Traçabilité totale** : chaque action est enregistrée et vérifiable.  
+- **Auditabilité inviolable** : logs utilisables comme preuve devant tribunal militaire ou certification OTAN.  
+- **Débriefing renforcé** : permet d’analyser chaque étape de la mission avec preuves vérifiables.  
+- **Institutionnalisation** : documentation complète et prête pour adoption officielle.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT intercepte une transmission suspecte.  
+- **Action** : le SignalClassifier identifie la modulation et l’AnomalyDetector signale une anomalie.  
+- **Résultat** : MissionLogger enregistre l’événement avec hash et signature, anomaly_report.md est généré, et l’état-major reçoit une preuve inviolable de la détection.
+
+---
+
+### 🌐 Mode MeshSync – Détail complet
+
+#### Objectif
+Le Mode MeshSync est conçu pour assurer la continuité des communications entre unités SIGINT, même en l’absence d’infrastructure civile ou militaire.  
+Il repose sur une architecture maillée (mesh network) permettant le partage immédiat des données de menace (ThreatMessage) et la synchronisation des informations critiques.  
+Ce mode est vital pour garantir la résilience des opérations en terrain hostile ou isolé.
+
+#### Modules associés
+- **MeshSyncEngine.kt** : moteur central de communication maillée, abstrait les différents transports.  
+- **MessageEnvelope.kt (CBOR)** : format compact et standardisé pour encapsuler les ThreatMessage.  
+- **TransportAdapter** : interface de transport adaptable (Wi‑Fi Direct, LoRa, ou autres).  
+- **CRDT légère** : mécanisme de fusion des données pour éviter les conflits et assurer la cohérence entre unités.  
+
+#### Procédures de fonctionnement
+1. **Initialisation du réseau maillé** : chaque unité démarre son transport (Wi‑Fi Direct ou LoRa).  
+2. **Diffusion des ThreatMessage** : les données interceptées sont encapsulées et partagées automatiquement.  
+3. **Store‑and‑forward** : les messages sont stockés localement et retransmis dès qu’une connexion est disponible.  
+4. **Fusion des données (CRDT)** : les informations reçues sont intégrées sans perte ni duplication.  
+
+#### SOP associée
+- **docs/SOP/transmission_SOP.md** : décrit les procédures pour activer MeshSync, tester la diffusion locale et valider la cohérence des données partagées.  
+
+#### Valeur opérationnelle (FARDC)
+- **Résilience des communications** : garantit le partage d’informations même en cas de brouillage ou destruction des infrastructures.  
+- **Interopérabilité** : permet aux unités de communiquer sans dépendre d’un point central.  
+- **Réactivité tactique** : diffusion immédiate des menaces détectées à toutes les unités connectées.  
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT détecte une transmission suspecte en zone isolée.  
+- **Action** : MeshSync encapsule la menace dans un MessageEnvelope et la diffuse via Wi‑Fi Direct.  
+- **Résultat** : les unités voisines reçoivent l’alerte en temps réel, même sans réseau civil, et peuvent coordonner une réponse immédiate.
+
+---
+
+### 🤖 Mode IA – SignalClassifier – Détail complet
+
+#### Objectif
+Le Mode IA – SignalClassifier est conçu pour classifier automatiquement les signaux interceptés grâce à un modèle d’intelligence artificielle embarqué.  
+Il permet d’identifier rapidement la modulation et la nature des transmissions radio, offrant un avantage tactique décisif en réduisant le temps nécessaire à l’analyse humaine.  
+Ce mode constitue la première étape vers une détection proactive des anomalies et menaces radio.
+
+#### Modules associés
+- **SignalClassifier.kt** : charge et exécute un modèle TensorFlow Lite pour classification des spectres.  
+- **Modèle IA (TFLite)** : fichier de modèle pré-entraîné, optimisé pour terminaux tactiques.  
+- **Integration avec AnomalyDetector** : prépare les résultats pour être exploités par le module de détection d’anomalies.  
+
+#### Procédures de fonctionnement
+1. **Chargement du modèle IA** : vérification de la présence et de l’intégrité du fichier TFLite.  
+2. **Classification des spectres** : analyse des données radio interceptées et attribution d’une modulation (ex. VHF_FM, AM, PSK).  
+3. **Retour de confiance** : chaque classification est accompagnée d’un score de confiance.  
+4. **Transmission des résultats** : les données classifiées sont envoyées vers MissionLogger et MeshSyncEngine pour diffusion.  
+
+#### SOP associée
+- **docs/SOP/anomaly_SOP.md** : décrit les procédures pour activer le SignalClassifier, valider les résultats et transmettre les classifications aux unités voisines.  
+
+#### Valeur opérationnelle (FARDC)
+- **Gain de temps** : classification immédiate des signaux sans intervention humaine.  
+- **Préparation à la détection proactive** : résultats exploitables directement par l’AnomalyDetector.  
+- **Interopérabilité** : classifications partagées via MeshSyncEngine pour coordination multi-unités.  
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT intercepte un signal inconnu sur une fréquence VHF.  
+- **Action** : le SignalClassifier analyse le spectre et identifie la modulation comme VHF_FM avec une confiance de 72 %.  
+- **Résultat** : MissionLogger enregistre la classification, MeshSyncEngine diffuse l’information aux unités voisines, et l’AnomalyDetector est prêt à vérifier si le comportement est suspect.
+
+---
+
+### 🧪 Tests d’intégration
+- **Scénarios validés** :  
+  - Géofence hors zone → déclenchement du wipe.  
+  - Clé de détresse → déclenchement du wipe.  
+  - Tamper matériel → déclenchement du wipe.  
+- **Résultats attendus** :  
+  - Suppression des clés et signatures.  
+  - Vidage des données sensibles.  
+  - Journalisation CRITICAL dans MissionLogger.  
+
+---
+
+### Valeur stratégique globale
+Ces modes de combat opérationnel assurent :  
+- **Résilience** : continuité des missions même en conditions dégradées.  
+- **Sécurité** : effacement automatique et traçabilité inviolable.  
+- **Interopérabilité** : communication maillée entre unités.  
+- **Innovation** : intégration de l’IA pour classification et détection proactive.
