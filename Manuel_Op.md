@@ -342,53 +342,65 @@ même lorsque toutes les infrastructures classiques (antenne relais, routeur, In
 - **Interopérabilité** : permet aux unités de fusionner leurs données sans dépendre d’un point central.  
 - **Institutionnalisation** : SOP documentée et intégrée dans le manuel, prête pour adoption officielle.
 
-### 🔋 Low-Power Mode – Détail complet
+### 🔋 Mode Low-Power – Détail complet
 
 #### Objectif
-Économiser l’énergie en mission longue durée, lorsque les unités SIGINT doivent rester opérationnelles
-pendant plusieurs jours sans possibilité de recharge immédiate.  
-Ce mode optimise la consommation électrique tout en maintenant les fonctions essentielles.
+Le Mode Low-Power est conçu pour prolonger l’autonomie des unités SIGINT lors de missions longues, en particulier dans des environnements où la recharge est impossible ou risquée.  
+Il optimise la consommation énergétique tout en maintenant les fonctions essentielles, garantissant la continuité des opérations sur plusieurs jours.
 
-#### Modules actifs
-- core/power/LowPowerManager.kt  
-  → module de gestion énergétique, réduit la fréquence CPU, désactive les capteurs non critiques et optimise les cycles de transmission.  
-- ui/tactical/NightVisionTheme.kt  
-  → interface visuelle adaptée aux opérations nocturnes, faible luminosité pour limiter la consommation et préserver la discrétion.
+#### Modules associés
+- **core/power/LowPowerManager.kt** : module de gestion énergétique, réduit la fréquence CPU, désactive les capteurs non critiques et optimise les cycles de transmission.  
+- **ui/tactical/NightVisionTheme.kt** : interface visuelle adaptée aux opérations nocturnes, faible luminosité pour limiter la consommation et préserver la discrétion.  
+
+#### Procédures de fonctionnement
+1. **Activation du mode basse consommation** : bascule automatique vers une configuration optimisée dès que l’autonomie descend sous un seuil critique.  
+2. **Réduction des ressources** : désactivation des modules non essentiels (capteurs secondaires, logs détaillés).  
+3. **Interface nocturne** : passage à un thème visuel discret, adapté à la vision nocturne et réduisant la consommation.  
+4. **Surveillance continue** : suivi en temps réel de l’autonomie restante et ajustement dynamique des priorités.  
 
 #### SOP associée
-- docs/SOP/power_SOP.md  
-  → décrit les procédures standard pour activer le mode basse consommation, vérifier l’autonomie restante,
-  et ajuster les priorités de mission en fonction de l’énergie disponible.
+- **docs/SOP/power_SOP.md** : décrit les procédures pour activer le mode Low-Power, vérifier l’autonomie restante et ajuster les priorités de mission en fonction de l’énergie disponible.  
 
 #### Valeur opérationnelle (FARDC)
 - **Autonomie prolongée** : permet de maintenir les opérations sur plusieurs jours en terrain hostile.  
-- **Discrétion visuelle** : interface adaptée à la vision nocturne, réduit la signature lumineuse.  
+- **Discrétion visuelle** : interface adaptée à la vision nocturne, réduisant la signature lumineuse.  
 - **Optimisation tactique** : désactive les modules non essentiels pour concentrer l’énergie sur la capture et la transmission critique.  
-- **Survie opérationnelle** : garantit que même avec une batterie faible, les fonctions vitales (SIGINT, transmission) restent actives.
+- **Survie opérationnelle** : garantit que même avec une batterie faible, les fonctions vitales (SIGINT, transmission) restent actives.  
 
-### 🕶️ Silent Ops Mode – Détail complet
+#### Exemple de scénario
+- **Situation** : une unité SIGINT est déployée en zone montagneuse sans possibilité de recharge pendant 72 heures.  
+- **Action** : l’opérateur active le mode Low-Power, réduisant la consommation énergétique et basculant l’interface en thème nocturne.  
+- **Résultat** : l’unité reste opérationnelle tout au long de la mission, assurant la capture et la transmission des signaux critiques malgré des ressources limitées.
+
+### 🕶️ Mode Silent Ops – Détail complet
 
 #### Objectif
-Permettre des opérations discrètes en limitant au maximum les traces numériques et visuelles.
-Ce mode est conçu pour les missions où la furtivité est prioritaire : infiltration, observation, ou collecte
-sans alerter l’ennemi.
+Le Mode Silent Ops est conçu pour les opérations où la discrétion est vitale.  
+Il minimise les traces numériques et visuelles afin de réduire la probabilité de détection par l’ennemi.  
+Ce mode est utilisé lors des missions d’infiltration, de surveillance ou de collecte discrète de renseignements.
 
-#### Modules actifs
-- ui/tactical/LowLightRenderer.kt  
-  → interface visuelle adaptée aux environnements nocturnes, faible luminosité pour réduire la signature visuelle.  
-- core/audit/MissionLogger.kt (journal minimal)  
-  → enregistre uniquement les événements critiques, afin de limiter les traces exploitables tout en conservant une traçabilité minimale.
+#### Modules associés
+- **ui/tactical/LowLightRenderer.kt** : interface visuelle adaptée aux environnements nocturnes, faible luminosité pour réduire la signature visuelle.  
+- **core/audit/MissionLogger.kt (journal minimal)** : enregistre uniquement les événements essentiels, limitant les traces exploitables tout en conservant une traçabilité minimale.  
+
+#### Procédures de fonctionnement
+1. **Activation de l’interface discrète** : bascule automatique vers un affichage à faible luminosité.  
+2. **Journalisation réduite** : seuls les événements critiques sont enregistrés, sans détails superflus.  
+3. **Minimisation des émissions** : limitation des transmissions numériques pour réduire la signature électronique.  
 
 #### SOP associée
-- docs/SOP/silent_ops_SOP.md  
-  → décrit les procédures standard pour activer le mode Silent Ops, ajuster la luminosité de l’interface,
-  et vérifier la journalisation minimale en Evidence Mode réduit.
+- **docs/SOP/silent_ops_SOP.md** : décrit les procédures pour activer le mode Silent Ops, ajuster la luminosité et vérifier la journalisation minimale.  
 
 #### Valeur opérationnelle (FARDC)
 - **Furtivité numérique** : réduit la quantité de données générées et stockées.  
 - **Discrétion visuelle** : interface adaptée aux opérations nocturnes, minimisant la détection par observation directe.  
-- **Sécurité opérationnelle** : journalisation minimale, mais suffisante pour conserver une preuve en cas de débriefing.  
-- **Adaptabilité tactique** : idéal pour missions d’infiltration ou observation prolongée sans révéler la présence SIGINT.
+- **Sécurité opérationnelle** : journalisation minimale mais suffisante pour conserver une preuve en cas de débriefing.  
+- **Adaptabilité tactique** : idéal pour missions d’infiltration ou observation prolongée sans révéler la présence SIGINT.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT doit observer discrètement une zone urbaine hostile.  
+- **Action** : l’opérateur active le mode Silent Ops, réduisant la luminosité de l’interface et limitant les transmissions.  
+- **Résultat** : la mission se déroule sans alerter l’ennemi, tout en conservant un journal minimal pour débriefing.
 
 ### 📑 Evidence Mode – Détail complet
 
@@ -413,57 +425,68 @@ Ce mode est conçu pour les opérations où la preuve et l’auditabilité sont 
 - **Institutionnalisation** : documentation complète et prête pour adoption officielle.  
 - **Débriefing renforcé** : permet d’analyser chaque étape de la mission avec preuves vérifiables.
 
-### 🛰️ Fusion & Géolocalisation Mode – Détail complet
+### 🛰️ Mode Fusion & Géolocalisation – Détail complet
 
 #### Objectif
-Localiser précisément un émetteur ennemi par triangulation et fusion de données SIGINT.  
-Ce mode est conçu pour les opérations de repérage et neutralisation, en combinant plusieurs capteurs et unités pour obtenir une position exacte.
+Le Mode Fusion & Géolocalisation est conçu pour localiser avec précision un émetteur ennemi par triangulation et fusion des données SIGINT.  
+Il combine les mesures de plusieurs unités pour obtenir une position exacte, permettant une action rapide et coordonnée.  
+Ce mode est essentiel pour les opérations de neutralisation, de surveillance ciblée et de sécurisation des zones sensibles.
 
-#### Modules actifs
-- comint/geo/TDOA_Engine.kt  
-  → moteur de calcul basé sur Time Difference of Arrival (TDOA), permettant la triangulation des signaux interceptés.  
-- fusion_geo/  
-  → module de fusion géospatiale, combine les données de plusieurs unités pour améliorer la précision de localisation.
+#### Modules associés
+- **comint/geo/TDOA_Engine.kt** : moteur de calcul basé sur le Time Difference of Arrival (TDOA), permettant la triangulation des signaux interceptés.  
+- **fusion_geo/** : module de fusion géospatiale, combine les données de plusieurs capteurs et unités pour améliorer la précision.  
+
+#### Procédures de fonctionnement
+1. **Capture des signaux** : chaque unité SIGINT enregistre les signaux ennemis avec horodatage précis.  
+2. **Calcul TDOA** : le moteur détermine la différence de temps d’arrivée entre les signaux captés par différentes unités.  
+3. **Fusion des données** : les résultats sont combinés via le module fusion_geo pour obtenir une localisation consolidée.  
+4. **Validation cartographique** : comparaison avec les cartes offline pour confirmer la position et réduire les marges d’erreur.  
 
 #### SOP associée
-- docs/SOP/fusion_geo_SOP.md  
-  → décrit les procédures standard pour activer le mode fusion, synchroniser les unités SIGINT,
-  et valider la triangulation par comparaison avec les cartes offline.
+- **docs/SOP/fusion_geo_SOP.md** : décrit les procédures pour activer le mode Fusion & Géolocalisation, synchroniser les unités et valider la triangulation.  
 
 #### Valeur opérationnelle (FARDC)
 - **Précision tactique** : localisation exacte des émetteurs ennemis, même en environnement complexe.  
 - **Coordination multi-unités** : fusion des données de plusieurs opérateurs pour renforcer la fiabilité.  
 - **Support direct aux opérations** : fournit des coordonnées exploitables pour neutralisation ou interception.  
-- **Institutionnalisation** : SOP documentée, prête pour adoption officielle et certification.
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
 
-### 🤖 IA Locale – Anomaly Detection Mode – Détail complet
+#### Exemple de scénario
+- **Situation** : plusieurs unités SIGINT interceptent un signal suspect dans une zone frontalière.  
+- **Action** : le TDOA Engine calcule les différences de temps d’arrivée, fusion_geo combine les résultats.  
+- **Résultat** : la position exacte de l’émetteur ennemi est déterminée et transmise à l’état-major pour action immédiate.
+
+### 🤖 Mode Anomaly Detection (IA Locale) – Détail complet
 
 #### Objectif
-Identifier automatiquement les comportements radio suspects ou non répertoriés dans les bases de menaces.  
-Ce mode permet une détection proactive des transmissions anormales, réduisant le temps de réaction des unités SIGINT.
+Le Mode Anomaly Detection est conçu pour identifier automatiquement les comportements radio suspects ou non répertoriés dans les bases de menaces connues.  
+Il permet une détection proactive des transmissions anormales, réduisant le temps de réaction des unités SIGINT et renforçant la sécurité opérationnelle.  
+Ce mode est essentiel pour anticiper les menaces émergentes et compléter les capacités de classification standard.
 
-#### Modules actifs
-- services/dsp/ai_inference/AnomalyDetector.kt  
-  → moteur d’inférence IA embarqué, basé sur Isolation Forest et autoencoder léger, optimisé pour terminaux tactiques.  
-- data/signatures/anomalies.json  
-  → base de signatures d’anomalies connues, enrichie en continu par les retours terrain et les détections IA.
+#### Modules associés
+- **services/dsp/ai_inference/AnomalyDetector.kt** : moteur d’inférence IA embarqué, basé sur des algorithmes légers (Isolation Forest, autoencoder).  
+- **data/signatures/anomalies.json** : base de signatures enrichie en continu par les retours terrain et les détections IA.  
+- **MissionLogger.kt (Evidence Mode)** : journalise chaque anomalie détectée pour garantir traçabilité et certification.  
+
+#### Procédures de fonctionnement
+1. **Analyse en temps réel** : l’IA embarquée surveille les spectres radio et compare les signaux aux signatures connues.  
+2. **Détection d’anomalies** : identification des transmissions suspectes ou non répertoriées.  
+3. **Alerte immédiate** : notification transmise aux unités voisines via MeshSyncEngine.  
+4. **Journalisation** : enregistrement des anomalies dans MissionLogger pour audit et débriefing.  
 
 #### SOP associée
-- docs/SOP/anomaly_SOP.md  
-  → décrit les procédures standard pour activer le mode Anomaly Detection, valider les alertes générées par l’IA,
-  et transmettre les rapports aux unités voisines via MeshSyncEngine.
+- **docs/SOP/anomaly_SOP.md** : décrit les procédures pour activer le mode Anomaly Detection, valider les alertes générées par l’IA et transmettre les rapports aux unités voisines.  
 
 #### Valeur opérationnelle (FARDC)
 - **Détection proactive** : identification des menaces non répertoriées dans les bases classiques.  
 - **Réactivité accrue** : alerte immédiate transmise aux unités proches pour action rapide.  
-- **Auditabilité** : chaque anomalie détectée est enregistrée dans MissionLogger (Evidence Mode).  
-- **Institutionnalisation** : SOP documentée, prête pour adoption officielle et certification.
+- **Auditabilité** : chaque anomalie détectée est enregistrée et certifiée.  
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
 
-### Valeur opérationnelle (FARDC)
-- Flexibilité : chaque mode correspond à un profil de mission spécifique.
-- Institutionnalisation : modes documentés et reliés aux SOP pour adoption officielle.
-- Sécurité : Evidence Mode et Silent Ops renforcent la traçabilité et la discrétion.
-- Résilience : Fallback Mode et Low-Power Mode assurent continuité même en conditions dégradées.
+#### Exemple de scénario
+- **Situation** : une unité SIGINT intercepte un signal inhabituel qui ne correspond à aucune modulation connue.  
+- **Action** : l’AnomalyDetector analyse le spectre et identifie un comportement suspect avec un score de confiance élevé.  
+- **Résultat** : une alerte est immédiatement transmise aux unités voisines via MeshSyncEngine, et MissionLogger enregistre l’événement pour débriefing et certification.
 
 ## 13. Modes de combat opérationnel – Implémentation
 
