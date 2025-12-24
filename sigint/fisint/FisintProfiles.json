@@ -1,19 +1,18 @@
 {
   "profiles": [
     {
-      "name": "DRONE_TELEMETRY_MAVLINK",
+      "name": "DRONE_TELEMETRY_LINK",
       "cadenceMs": 100,
-      "modulation": "FHSS",
+      "modulation": "GFSK",
       "frequencyBand": "ISM_2.4GHZ",
       "threatLevel": 3
     },
     {
-      "name": "SCADA_REMOTE_TERMINAL",
-      "cadenceMs": 5000,
-      "modulation": "FSK",
+      "name": "SCADA_INDUSTRIAL_SENSOR",
+      "cadenceMs": 10000,
+      "modulation": "LoRa",
       "frequencyBand": "VHF_DATA",
       "threatLevel": 2
     }
   ]
 }
-
