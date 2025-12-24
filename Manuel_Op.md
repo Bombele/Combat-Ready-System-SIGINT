@@ -685,3 +685,37 @@ Il repose sur un protocole d’échange opportuniste et compact, permettant aux 
 - **Situation** : deux patrouilles SIGINT se croisent en forêt sans réseau civil.  
 - **Action** : MeshSync détecte automatiquement la présence d’un pair et échange les menaces stockées (fréquences suspectes, positions rebelles).  
 - **Résultat** : en quelques secondes, les deux unités disposent d’une base commune de menaces actualisée, renforçant leur coordination et leur efficacité.
+
+## 🤖 Mode IA – SignalClassifier – Détail complet
+
+#### Objectif
+Le Mode IA – SignalClassifier est conçu pour agir comme un filtre automatique, permettant à l’opérateur de se concentrer sur la mission plutôt que sur l’analyse manuelle des spectrogrammes.  
+Il analyse les données IQ issues de l’antenne SDR, identifie la modulation, et lorsqu’elle correspond à une menace connue, génère automatiquement un **ThreatMessage** pour le MeshSyncEngine.  
+Ce mode boucle le cycle OODA (Observer – Orienter – Décider – Agir) de manière logicielle, garantissant une supériorité décisionnelle sur le terrain.
+
+#### Modules associés
+- **SignalClassifier.kt** : moteur IA embarqué basé sur TensorFlow Lite, chargé de la classification des signaux.  
+- **SDR Capture Module** : collecte les données IQ brutes du spectre radio.  
+- **MissionLogger.kt** : journalise et signe chaque détection pour assurer traçabilité et certification.  
+- **MeshSyncEngine.kt** : met en file d’attente et diffuse les ThreatMessage aux unités voisines.  
+
+#### Procédures de fonctionnement
+1. **Observer** : le module SDR capture le signal brut.  
+2. **Orienter** : le SignalClassifier identifie la modulation (ex. DMR, AM, PSK).  
+3. **Décider** : le système calcule un score de confiance (ex. 92 %) et juge si l’alerte doit être déclenchée.  
+4. **Agir** : un ThreatMessage est généré, signé par MissionLogger, et transmis via MeshSyncEngine.  
+
+#### SOP associée
+- **docs/SOP/anomaly_SOP.md** : décrit les procédures pour activer le SignalClassifier, valider les résultats IA et transmettre les alertes aux unités voisines.  
+
+#### Valeur opérationnelle (FARDC)
+- **Gain de temps** : classification et alerte instantanées, là où un opérateur humain mettrait plusieurs minutes.  
+- **Précision renforcée** : couplage des détections IA avec les coordonnées GPS pour créer une carte de chaleur des menaces en temps réel.  
+- **Supériorité décisionnelle** : passage direct de l’onde physique (spectre) à l’objet numérique (ThreatMessage), sans intervention humaine.  
+- **Interopérabilité** : intégration transparente avec MissionLogger et MeshSyncEngine pour diffusion immédiate.  
+- **Institutionnalisation** : SOP documentée, intégrée dans le manuel, prête pour adoption officielle.  
+
+#### Exemple de scénario
+- **Situation** : une unité SIGINT intercepte un signal inconnu sur une fréquence VHF.  
+- **Action** : le SignalClassifier identifie automatiquement une modulation DMR avec une confiance de 92 %.  
+- **Résultat** : un ThreatMessage est généré, signé et mis en file d’attente dans MeshSyncEngine. Les unités voisines reçoivent l’alerte en quelques secondes, renforçant la coordination tactique.
