@@ -1,19 +1,20 @@
 {
-  "signatures": [
+  "profiles": [
     {
-      "name": "SURV_RADAR_X",
+      "name": "DRONE_SEARCH_RADAR",
       "prfHz": 1200.0,
-      "bandwidthKhz": 5000.0,
+      "pwUs": 15.0,
+      "band": "S-BAND",
       "tolerance": 50.0,
       "threatLevel": 4
     },
     {
-      "name": "DRONE_DATA_LINK",
-      "prfHz": 400.0,
-      "bandwidthKhz": 2000.0,
+      "name": "MIL_NAV_RADAR",
+      "prfHz": 800.0,
+      "pwUs": 1.0,
+      "band": "X-BAND",
       "tolerance": 20.0,
       "threatLevel": 3
     }
   ]
 }
-
