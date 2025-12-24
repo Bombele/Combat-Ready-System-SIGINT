@@ -908,3 +908,63 @@ Il permet de synchroniser dans un flux unique les données issues du BFT (forces
 - **Sécurité renforcée** : compartimentage et chiffrement des payloads.  
 - **Auditabilité** : chaque message signé et journalisé pour certification.  
 - **Institutionnalisation** : adoption du COP comme doctrine d’emploi officielle.
+
+## 🛰️ Flux de Données – De l’Onde au Mesh (Chain of Intelligence)
+
+### Objectif
+Ce flux illustre comment une onde captée par une antenne SDR en terrain hostile (ex. jungle du Kivu) devient un paquet binaire optimisé circulant dans le réseau Mesh.  
+Il concrétise la **supériorité décisionnelle** en transformant un signal brut en renseignement exploitable, certifié et diffusé en temps réel.
+
+---
+
+### Agilité spectrale – CBOR & Protobuf
+- **Protobuf** : utilisé pour les échanges rapides via Wi‑Fi Direct, lorsque les unités sont proches et que le débit est élevé.  
+- **CBOR** : utilisé pour les messages critiques envoyés via LoRa, lorsque la portée et la discrétion sont prioritaires.  
+- **Résultat** : un système agile, capable d’adapter son codec en fonction du contexte opérationnel.
+
+---
+
+### Caractéristiques du flux
+
+#### Découplage total
+- **SignalClassifier** : analyse et génère un ThreatMessage sans se soucier du transport.  
+- **TransportAdapter** : relaie le message sans connaître son contenu.  
+- **Modularité** : permet de changer de radio ou d’IA sans modifier l’architecture globale.
+
+#### Furtivité électromagnétique
+- **PacketCodec** : réduit la durée d’émission (airtime) au minimum.  
+- **Effet tactique** : moins de temps d’émission = moins de chances d’être repéré par la goniométrie ennemie.  
+
+#### Légalité et preuve
+- **MissionLogger** : enregistre chaque classification dès l’origine.  
+- **Auditabilité** : même si un message est perdu dans le Mesh, une trace immuable existe sur le terminal source.  
+- **Valeur institutionnelle** : preuve certifiable pour débriefing et audit post‑mission.  
+
+---
+
+### Chaîne de l’intelligence – Étapes
+
+1. **Capture** : l’antenne SDR saisit l’onde brute.  
+2. **Classification (SignalClassifier)** : l’IA identifie modulation et menace.  
+3. **Journalisation (MissionLogger)** : l’événement est signé et horodaté.  
+4. **Encapsulation (UnifiedMessage)** : le message est transformé en paquet binaire (CBOR ou Protobuf).  
+5. **Transmission (MeshSyncEngine)** : diffusion opportuniste via Wi‑Fi Direct ou LoRa.  
+6. **Fusion COP** : intégration simultanée des données BFT (forces amies) et SIGINT (menaces ennemies) dans un flux unique.  
+
+---
+
+### 🏁 Bilan – Plateforme intégrée
+Le système combat‑ready SIGINT + BFT constitue une **plateforme intégrée** :  
+- **Capteurs** : SDR (SIGINT) & GPS (BFT).  
+- **Intelligence** : classification IA & fusion COP.  
+- **Transport** : MeshSyncEngine, codecs CBOR/Protobuf, adapters multi‑radios.  
+- **Sécurité** : Panic Wipe, HMAC, chiffrement, rotation des clés.  
+
+---
+
+### Valeur opérationnelle (FARDC)
+- **Agilité spectrale** : adaptation automatique du codec selon contexte (rapidité vs portée).  
+- **Supériorité décisionnelle** : transformation instantanée du spectre en renseignement exploitable.  
+- **Furtivité** : réduction de l’airtime, minimisation du risque de détection.  
+- **Auditabilité totale** : chaque message est signé et journalisé, garantissant une traçabilité inviolable.  
+- **Institutionnalisation** : architecture documentée et prête pour adoption officielle.
