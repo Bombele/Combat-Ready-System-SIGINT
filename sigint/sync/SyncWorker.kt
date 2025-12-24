@@ -13,7 +13,7 @@ object SyncWorker {
             val threatPayload = PacketCodec.encodeCBOR(data)
             
             val msg = UnifiedMessage(
-                senderId = "SIGINT_UNIT_01",
+                senderId = "SIGINT_NODE_LOCAL",
                 type = MessageType.SIGINT_THREAT,
                 payload = threatPayload
             )
@@ -22,4 +22,3 @@ object SyncWorker {
         }
     }
 }
-
