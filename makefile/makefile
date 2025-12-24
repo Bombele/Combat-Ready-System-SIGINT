@@ -67,3 +67,14 @@ recette-sigint-full: recette-sigint
 	@echo "=== [LANCEMENT RECETTE ELINT] ==="
 	@java -cp bin sigint.elint.tests.ElintTest
 	@echo "=== [SYSTÈME SIGINT TOTALEMENT VALIDÉ] ==="
+
+# 🚀 Recette SIGINT (ELINT - RADAR)
+recette-elint:
+	@echo "=== [RECETTE SIGINT - ELINT] ==="
+	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/*.kt
+	@java -cp bin sigint.elint.tests.ElintTest
+	@echo "=== [RECETTE ELINT TERMINÉE] ==="
+
+# Recette Globale SIGINT (COMINT + ELINT)
+recette-sigint-full: recette-sigint recette-elint
+	@echo "🛡️  CHAÎNE SIGINT INTÉGRALE VALIDÉE"
