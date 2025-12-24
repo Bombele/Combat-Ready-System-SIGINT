@@ -85,4 +85,41 @@ Ce projet évolue d’une **ossature logicielle auditable** vers un **système d
 
 ---
 
-✅ Ce README actualisé décrit désormais toutes les briques nécessaires pour un **système SIGINT combat-ready**, capable de survivre en zone hostile et d’être certifié pour usage institutionnel.
+## 🎯 Fiche de Synthèse Tactique – Modes d’Activation
+
+Cette fiche guide l’opérateur SIGINT dans le choix du mode adapté à sa mission.
+
+### 🕶️ Infiltration (Opérations discrètes)
+- **Activer :** Silent Ops Mode
+- **Modules clés :**
+  - ui/tactical/LowLightRenderer.kt (interface nocturne)
+  - core/audit/MissionLogger.kt (journal minimal)
+- **Effet :** Réduction des traces numériques et visuelles, transmission limitée.
+
+### 👁️ Surveillance de Zone (Observation prolongée)
+- **Activer :** Low-Power Mode + SignalClassifier
+- **Modules clés :**
+  - core/power/LowPowerManager.kt (veille intelligente)
+  - services/dsp/ai_inference/SignalClassifier.kt (IA de détection)
+- **Effet :** Économie d’énergie, IA déclenchée uniquement si RSSI > seuil (squelch intelligent).
+
+### 🚨 Repli d’Urgence (Capture ou menace critique)
+- **Activer :** Panic Wipe (TacticalWipeManager)
+- **Modules clés :**
+  - core/security/TacticalWipeManager.kt (effacement immédiat)
+  - core/audit/MissionLogger.kt (log CRITICAL signé)
+- **Effet :** Suppression des clés et données sensibles, extinction sécurisée.
+
+### 📡 Patrouille & Partage (Coordination inter-unités)
+- **Activer :** MeshSyncEngine
+- **Modules clés :**
+  - core/sync/MeshSyncEngine.kt (store-and-forward)
+  - core/sync/WifiDirectAdapter.kt (transport opportuniste)
+- **Effet :** Diffusion automatique des menaces entre unités, déduplication et priorisation.
+
+---
+
+✅ **Conseil terrain :**  
+- Toujours vérifier que `active_geofence.poly` est chargé avant mission.  
+- Surveiller la batterie : activer le squelch intelligent pour éviter une IA en continu.  
+- En mode Evidence, conserver les logs pour certification et débriefing.
