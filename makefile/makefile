@@ -92,3 +92,16 @@ recette-sigint-full: recette-sigint recette-elint recette-fisint
 	@echo "🛡️  CHAÎNE ROEM 100% VALIDÉE : COMINT + ELINT + FISINT"
 	@echo "🚀 SYSTÈME SRC PRÊT POUR DÉPLOIEMENT SOUVERAIN"
 	@echo "=========================================================="
+
+# 📊 Certification et Clôture de Mission
+certifier-mission:
+	@echo "=== [GÉNÉRATION DU RAPPORT DE MISSION SRC] ==="
+	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt
+	@java -cp bin sigint.audit.MissionReportGenerator
+	@echo "=========================================================="
+	@echo "🛡️  RAPPORT SIGNÉ DISPONIBLE DANS data/audit/"
+	@echo "🚀 MISSION TERMINÉE : SYSTÈME PRÊT POUR RÉINITIALISATION"
+	@echo "=========================================================="
+
+# Commande Ultime : Recette complète + Rapport
+combat-ready: recette-sigint-full certifier-mission
