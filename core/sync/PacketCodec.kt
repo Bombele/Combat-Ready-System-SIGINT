@@ -1,61 +1,56 @@
 package core.sync
 
+import bft.models.BFTPosition
+import services.dsp.ai_inference.ThreatMessage
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.protobuf.InvalidProtocolBufferException
-import core.audit.MissionLogger
 
 /**
  * SRC - PacketCodec
- * Sérialisation compacte des UnifiedMessage pour transmission Mesh.
- * Supporte CBOR (furtif) et Protobuf (rapide).
+ * Encode/Décode les objets tactiques (BFT, SIGINT) pour transport Mesh.
  */
 object PacketCodec {
 
-    // CBOR mapper (furtivité, taille réduite)
-    private val cborMapper = ObjectMapper(CBORFactory())
+    private val cborMapper = jacksonObjectMapper(CBORFactory())
+    private val jsonMapper = jacksonObjectMapper()
 
     /**
-     * Encode un UnifiedMessage en CBOR
+     * Encode un objet en CBOR (par défaut).
+     * Fallback JSON si CBOR échoue.
      */
-    fun encodeCBOR(msg: UnifiedMessage): ByteArray {
+    fun encodeCBOR(obj: Any): ByteArray {
         return try {
-            cborMapper.writeValueAsBytes(msg)
+            cborMapper.writeValueAsBytes(obj)
         } catch (e: Exception) {
-            MissionLogger.warning("CBOR encode failed: ${e.message}")
-            ByteArray(0)
+            jsonMapper.writeValueAsBytes(obj)
         }
     }
 
     /**
-     * Decode un UnifiedMessage depuis CBOR
+     * Décode un payload en objet typé.
+     * Utilise CBOR, fallback JSON.
      */
-    fun decodeCBOR(data: ByteArray): UnifiedMessage? {
+    inline fun <reified T> decodeCBOR(payload: ByteArray): T? {
         return try {
-            cborMapper.readValue(data, UnifiedMessage::class.java)
+            cborMapper.readValue(payload, T::class.java)
         } catch (e: Exception) {
-            MissionLogger.warning("CBOR decode failed: ${e.message}")
-            null
+            try {
+                jsonMapper.readValue(payload, T::class.java)
+            } catch (ex: Exception) {
+                null
+            }
         }
     }
 
     /**
-     * Encode un UnifiedMessage en Protobuf
-     * (nécessite un schéma .proto compilé en classes Java/Kotlin)
+     * Exemple : sérialiser une position BFT
      */
-    fun encodeProtobuf(protoMsg: UnifiedMessageProto.UnifiedMessage): ByteArray {
-        return protoMsg.toByteArray()
-    }
+    fun encodeBFTPosition(pos: BFTPosition): ByteArray = encodeCBOR(pos)
+    fun decodeBFTPosition(payload: ByteArray): BFTPosition? = decodeCBOR(payload)
 
     /**
-     * Decode un UnifiedMessage depuis Protobuf
+     * Exemple : sérialiser une menace SIGINT
      */
-    fun decodeProtobuf(data: ByteArray): UnifiedMessageProto.UnifiedMessage? {
-        return try {
-            UnifiedMessageProto.UnifiedMessage.parseFrom(data)
-        } catch (e: InvalidProtocolBufferException) {
-            MissionLogger.warning("Protobuf decode failed: ${e.message}")
-            null
-        }
-    }
+    fun encodeThreat(threat: ThreatMessage): ByteArray = encodeCBOR(threat)
+    fun decodeThreat(payload: ByteArray): ThreatMessage? = decodeCBOR(payload)
 }
