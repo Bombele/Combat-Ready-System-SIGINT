@@ -61,3 +61,9 @@ recette-sigint:
 	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/**/*.kt
 	@java -cp bin sigint.comint.tests.ComintTest
 	@echo "=== [RECETTE SIGINT TERMINÉE] ==="
+
+# Recette globale SIGINT
+recette-sigint-full: recette-sigint
+	@echo "=== [LANCEMENT RECETTE ELINT] ==="
+	@java -cp bin sigint.elint.tests.ElintTest
+	@echo "=== [SYSTÈME SIGINT TOTALEMENT VALIDÉ] ==="
