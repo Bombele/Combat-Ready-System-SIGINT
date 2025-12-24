@@ -719,3 +719,61 @@ Ce mode boucle le cycle OODA (Observer – Orienter – Décider – Agir) de ma
 - **Situation** : une unité SIGINT intercepte un signal inconnu sur une fréquence VHF.  
 - **Action** : le SignalClassifier identifie automatiquement une modulation DMR avec une confiance de 92 %.  
 - **Résultat** : un ThreatMessage est généré, signé et mis en file d’attente dans MeshSyncEngine. Les unités voisines reçoivent l’alerte en quelques secondes, renforçant la coordination tactique.
+
+## 🔐 Chaîne de Confiance – Scripts & Makefile
+
+### Objectif
+Le dossier `scripts/` et le Makefile consolidé constituent la touche finale de l’architecture SIGINT Combat‑Ready.  
+Ils assurent le durcissement des binaires, la rotation des clés, la vérification d’intégrité et le nettoyage forensic, garantissant que le système reste inviolable même en cas de capture ou de tentative de sabotage.
+
+---
+
+### Scripts de sécurité
+
+#### harden_binary.sh
+- **Rôle** : transforme le code lisible en un bloc obscurci et protégé.  
+- **Effets** :
+  - **Déni d’analyse** : empêche l’ingénierie inverse des fréquences surveillées et des algorithmes.  
+  - **Protection contre le tampering** : injecte une signature d’intégrité pour bloquer toute modification malveillante.  
+  - **Nettoyage forensic** : supprime les symboles de debug et les métadonnées sensibles.  
+
+#### rotate_keys.sh
+- **Rôle** : régénère les clés cryptographiques avant chaque mission.  
+- **Valeur opérationnelle** : empêche l’utilisation prolongée d’une même clé, réduisant le risque de compromission.  
+- **Best practice militaire** : rotation régulière des clés via `openssl`.  
+
+#### integrity_check.sh
+- **Rôle** : vérifie l’intégrité du binaire à chaque démarrage.  
+- **Valeur opérationnelle** : détecte toute tentative d’injection de backdoor ou de sabotage.  
+- **Usage terrain** : l’opérateur peut lancer `make check-integrity` avant patrouille pour validation rapide.  
+
+#### clean_logs.sh
+- **Rôle** : efface les journaux sensibles après mission ou avant transfert d’équipement.  
+- **Valeur opérationnelle** : garantit la sanitisation et empêche la fuite d’informations stratégiques.  
+
+---
+
+### 🚀 Makefile Final – Tableau de Bord du Système
+
+Le Makefile consolidé devient le **point d’entrée unique** pour piloter l’ensemble de l’architecture.  
+Il est conçu pour être scannable, modulaire et audit‑ready, réduisant les erreurs humaines sous stress.
+
+#### Caractéristiques
+- **Automatisation de la signature** : chaque compilation génère automatiquement `specs/integrity_signature.txt`, assurant la traçabilité et la référence pour les futurs tests d’intégrité.  
+- **Modularité** : l’opérateur peut exécuter des commandes ciblées (`make check-integrity`, `make clean-logs`) sans recompiler tout le système.  
+- **Auditabilité** : chaque commande renvoie un statut clair ([OK], [ALERTE]), facilitant la prise de décision rapide en opération.  
+
+---
+
+### Valeur opérationnelle (FARDC)
+- **Chaîne de confiance complète** : du code source au binaire durci, chaque étape est sécurisée et vérifiable.  
+- **Résilience contre l’adversaire** : obscurcissement, signatures et contrôles empêchent l’analyse et le sabotage.  
+- **Autonomie de l’opérateur** : procédures simplifiées, utilisables sans expertise cryptographique.  
+- **Institutionnalisation** : SOP documentées et intégrées, prêtes pour adoption officielle.  
+
+---
+
+### Exemple de scénario
+- **Situation** : une unité SIGINT revient de mission et doit transférer son matériel à une autre patrouille.  
+- **Action** : l’opérateur exécute `make clean-logs` pour effacer les journaux, puis `make rotate-keys` pour générer de nouvelles clés.  
+- **Résultat** : le terminal est remis en état sécurisé, prêt pour une nouvelle mission, avec une intégrité vérifiée et une traçabilité garantie.
