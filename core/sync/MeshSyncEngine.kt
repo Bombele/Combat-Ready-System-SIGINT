@@ -106,3 +106,11 @@ object MeshSyncEngine {
         }
     }
 }
+
+// Dans la fonction qui reçoit les messages du réseau
+fun onMessageReceived(msg: UnifiedMessage) {
+    // 1. Log et vérification sécurité (déjà fait)
+    
+    // 2. Envoi à l'interface pour mise à jour en temps réel
+    FusionOverlay.processIncomingMessage(msg)
+}
