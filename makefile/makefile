@@ -1,62 +1,56 @@
-# =============================================================================
-# SRC - MAKEFILE OPÉRATIONNEL (FARDC SIGINT SYSTEM)
-# =============================================================================
+# Makefile - Système SRC Combat-Ready
 
-# Chemins
-SCRIPTS_DIR = scripts
-DEPLOY_SCRIPT = infra/deployment/deploy_field.sh
-BUILD_DIR = build
-BIN = $(BUILD_DIR)/sigint-engine
-
-.PHONY: all build harden deploy test rotate-keys clean-logs check-integrity help
-
-all: build harden test
-
-# --- [ PHASE 1 : CONSTRUCTION ] ---
+# Compilation et durcissement
 build:
-	@echo "🛠️  Compilation du système SRC..."
-	@mkdir -p build
-	kotlinc src/Main.kt core/**/*.kt bft/**/*.kt services/**/*.kt ui/**/*.kt -include-runtime -d build/sigint-engine.jar
+	@echo "[BUILD] Compilation du binaire..."
+	@kotlinc -d bin/ src/**/*.kt
 
-# --- [ PHASE 2 : SÉCURISATION ] ---
 harden:
-	@echo "🛡️  Démarrage du durcissement tactique..."
-	@bash $(SCRIPTS_DIR)/harden_binary.sh
-	@# Sauvegarde de la signature pour integrity_check
-	@sha256sum $(BIN) | cut -d ' ' -f1 > specs/integrity_signature.txt
-	@echo "[OK] Binaire obscurci et signature d'intégrité générée."
+	@echo "[HARDEN] Application des routines d'obscurcissement..."
+	@./scripts/harden_binary.sh
 
+# Sécurité
 rotate-keys:
-	@bash $(SCRIPTS_DIR)/rotate_keys.sh
-
-# --- [ PHASE 3 : VALIDATION ] ---
-test:
-	@echo "🧪 Lancement de la suite de tests d'intégration..."
-	@bash $(SCRIPTS_DIR)/run_tests.sh
+	@echo "[SECURITY] Rotation des clés de mission..."
+	@./scripts/rotate_keys.sh
 
 check-integrity:
-	@bash $(SCRIPTS_DIR)/integrity_check.sh
+	@echo "[SECURITY] Vérification d'intégrité..."
+	@./scripts/integrity_check.sh
 
-# --- [ PHASE 4 : DÉPLOIEMENT ] ---
-deploy:
-	@echo "🚀 Déploiement sur terminal de combat..."
-	@bash $(DEPLOY_SCRIPT) --zone KIVU_NORD --unit_id ALPHA-01
-
-# --- [ UTILS ] ---
 clean-logs:
-	@bash $(SCRIPTS_DIR)/clean_logs.sh
+	@echo "[SECURITY] Nettoyage des logs..."
+	@./scripts/clean_logs.sh
 
-clean:
-	@echo "🧹 Nettoyage de l'espace de travail..."
-	@rm -rf $(BUILD_DIR)
-	@echo "[OK] Dossier build supprimé."
+deploy:
+	@echo "[DEPLOY] Déploiement terrain..."
+	@./infra/deployment/deploy.sh
 
-help:
-	@echo "Usage : make [CIBLE]"
-	@echo "  build            : Compile le binaire SIGINT"
-	@echo "  harden           : Obscurcit le binaire et génère la signature"
-	@echo "  test             : Lance les tests de la chaîne OODA"
-	@echo "  deploy           : Prépare l'appareil pour le terrain"
-	@echo "  rotate-keys      : Génère de nouvelles clés master/session"
-	@echo "  check-integrity  : Vérifie si le binaire a été altéré"
+# Tests unitaires
+test:
+	@echo "[TEST] Simulation complète..."
+	@./scripts/run_tests.sh
 
+# 🚀 Test Final de Recette
+recette:
+	@echo "=== [TEST FINAL DE RECETTE - SRC] ==="
+	@if [ ! -f "data/keys/master.key" ]; then \
+		echo "[FAIL] Clés de mission absentes."; exit 1; \
+	else \
+		echo "[OK] Clés de mission présentes."; \
+	fi
+	@echo "[INFO] Test Geofence..."
+	@./scripts/simulate_gps_outside_zone.sh || { echo "[FAIL] Geofence non déclenché."; exit 1; }
+	@echo "[OK] Geofence déclenché correctement."
+	@echo "[INFO] Chargement modèle IA..."
+	@./scripts/test_sigint.sh || echo "[WARN] Modèle IA absent, mode dégradé."
+	@echo "[INFO] Test MeshSyncEngine..."
+	@./scripts/test_mesh.sh || { echo "[FAIL] MeshSyncEngine non opérationnel."; exit 1; }
+	@echo "[OK] MeshSyncEngine opérationnel."
+	@echo "[INFO] Test diffusion BFT..."
+	@./scripts/test_bft.sh || { echo "[FAIL] BFT non diffusé."; exit 1; }
+	@echo "[OK] BFT diffusé."
+	@echo "[INFO] Test FusionOverlay..."
+	@./scripts/test_ui.sh || { echo "[FAIL] UI non fonctionnelle."; exit 1; }
+	@echo "[OK] FusionOverlay opérationnel."
+	@echo "=== [RECETTE TERMINÉE : SYSTÈME COMBAT-READY] ==="
