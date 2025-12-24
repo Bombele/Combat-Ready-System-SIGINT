@@ -1,1 +1,7 @@
-
+{
+  "profiles": [
+    { "name": "VHF_MIL_NFM", "band": "VHF", "modulation": "NFM", "bandwidthKhz": 12.5, "snrMinDb": 12 },
+    { "name": "UHF_DMR_DATA", "band": "UHF", "modulation": "FSK", "bandwidthKhz": 25.0, "snrMinDb": 15 },
+    { "name": "VHF_AIR_AM", "band": "VHF", "modulation": "AM", "bandwidthKhz": 8.0, "snrMinDb": 10 }
+  ]
+}
