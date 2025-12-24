@@ -7,7 +7,7 @@ import java.util.Date
 
 /**
  * SRC - MissionReportGenerator
- * Génère le bilan final de l'opération avec signature d'intégrité.
+ * Génère le bilan final de l'opération avec signature d'intégrité HMAC.
  */
 object MissionReportGenerator {
 
@@ -17,28 +17,30 @@ object MissionReportGenerator {
     fun generateFinalReport(missionId: String) {
         println("[REPORT] Compilation des données de mission : $missionId...")
 
+        // Compilation des statistiques depuis les logs
         val reportData = mutableMapOf<String, Any>(
-            "mission_id" to missionId,
-            "timestamp" to System.currentTimeMillis(),
-            "summary" to mapOf(
-                "comint_hits" to countOccurrences("COMINT_MATCH"),
-                "elint_hits" to countOccurrences("ELINT_MATCH"),
-                "fisint_hits" to countOccurrences("FISINT_MATCH")
+            "mission_metadata" to mapOf(
+                "id" to missionId,
+                "date" to sdf.format(Date()),
+                "status" to "COMPLETED"
             ),
-            "critical_alerts" to extractCriticalAlerts()
+            "intelligence_summary" to mapOf(
+                "comint_detections" to countOccurrences("COMINT_MATCH"),
+                "elint_detections" to countOccurrences("ELINT_MATCH"),
+                "fisint_detections" to countOccurrences("FISINT_MATCH")
+            ),
+            "threat_log" to extractRecentAlerts()
         )
 
-        val reportName = "REPORT_${missionId}_${sdf.format(Date())}.json"
-        val reportFile = File("data/audit/$reportName")
-
-        // Utilisation de ton AuditExport pour l'écriture et la signature HMAC
-        // On récupère une clé de signature (simulée ici)
-        val secretKey = "SECRET_MISSION_KEY".toByteArray()
+        val reportPath = "data/audit/REPORT_${missionId}.json"
         
-        val success = AuditExport.writeJson(reportFile.absolutePath, reportData, secretKey)
+        // Utilisation de la clé secrète de mission pour signer le rapport
+        val missionKey = File("data/keys/master.key").readBytes()
+        
+        val success = AuditExport.writeJson(reportPath, reportData, missionKey)
 
         if (success) {
-            println("✅ Rapport généré et signé : ${reportFile.name}")
+            println("✅ Rapport AAR généré et signé : $reportPath")
         } else {
             println("❌ Échec de la génération du rapport.")
         }
@@ -50,9 +52,9 @@ object MissionReportGenerator {
         return logFile.readLines().count { it.contains(pattern) }
     }
 
-    private fun extractCriticalAlerts(): List<String> {
+    private fun extractRecentAlerts(): List<String> {
         val logFile = File("data/logs/sigint_module.log")
         if (!logFile.exists()) return emptyList()
-        return logFile.readLines().filter { it.contains("[WARN]") || it.contains("[ERROR]") }.takeLast(10)
+        return logFile.readLines().filter { it.contains("MATCH") }.takeLast(20)
     }
 }
