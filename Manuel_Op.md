@@ -968,3 +968,64 @@ Le système combat‑ready SIGINT + BFT constitue une **plateforme intégrée** 
 - **Furtivité** : réduction de l’airtime, minimisation du risque de détection.  
 - **Auditabilité totale** : chaque message est signé et journalisé, garantissant une traçabilité inviolable.  
 - **Institutionnalisation** : architecture documentée et prête pour adoption officielle.
+
+## 🎯 FusionOverlay.kt – Interface tactique décisionnelle
+
+### Objectif
+Le module **FusionOverlay.kt** est la dernière étape de la plateforme SIGINT + BFT.  
+Il transforme les paquets binaires (CBOR/Protobuf) en objets graphiques standardisés sur la carte tactique, permettant à l’opérateur de passer du renseignement brut à une aide directe à la décision.
+
+---
+
+### Caractéristiques révolutionnaires
+
+#### Hiérarchie de l’information
+- Les zones SIGINT (souvent incertaines ou larges) sont représentées sous les positions BFT (précises).  
+- L’opérateur visualise instantanément si une unité amie est “dans le rouge” (zone de menace).  
+
+#### Standardisation
+- Utilisation de **TacticalIcon** conforme aux symboles militaires standards (APP‑6).  
+- Rend le logiciel immédiatement utilisable par toute unité formée aux conventions OTAN/FARDC.  
+
+#### Common Operating Picture (COP)
+- Grâce au **MeshSyncEngine**, chaque terminal possède la même vue.  
+- Exemple : si l’unité A détecte un radar, l’unité B le voit apparaître en temps réel sur sa carte.  
+- Le COP est ainsi concrétisé : une vision commune, partagée et certifiée.  
+
+---
+
+### Architecture complète – Arsenal numérique
+
+- **core/** : l’armure et le métabolisme du système  
+  - Sécurité (Panic Wipe, HMAC, Encryption)  
+  - Synchronisation (MeshSyncEngine)  
+  - Auditabilité (MissionLogger)  
+
+- **bft/** : les yeux internes  
+  - Localisation des forces amies  
+  - Transmission sécurisée des positions GPS  
+
+- **sigint/** : les oreilles externes  
+  - IA de classification des signaux (SignalClassifier)  
+  - Détection proactive des anomalies (AnomalyDetector)  
+  - Fusion & géolocalisation des menaces  
+
+- **ui/** : le cerveau décisionnel  
+  - FusionOverlay.kt : interface cartographique enrichie  
+  - Cartographie tactique avec hiérarchie visuelle et symboles standardisés  
+
+---
+
+### Valeur opérationnelle (FARDC)
+
+- **Supériorité décisionnelle** : passage direct du spectre brut à une carte tactique exploitable.  
+- **Interopérabilité** : symboles APP‑6 et COP partagé entre toutes les unités.  
+- **Réduction du risque** : hiérarchie visuelle permettant d’identifier immédiatement les unités exposées.  
+- **Institutionnalisation** : architecture complète documentée, prête pour adoption officielle par les FARDC.  
+
+---
+
+### Exemple de scénario
+- **Situation** : une unité SIGINT détecte une émission radar suspecte.  
+- **Action** : le SignalClassifier génère un ThreatMessage, signé et diffusé via MeshSyncEngine.  
+- **Résultat** : FusionOverlay affiche la zone de menace sur la carte tactique. Les positions BFT des unités amies apparaissent au‑dessus, permettant au commandement de décider immédiatement d’un repositionnement ou d’une contre‑mesure.
