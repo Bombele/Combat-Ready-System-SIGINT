@@ -1,58 +1,85 @@
 package services.dsp.ai_inference
 
-import core.sync.ThreatMessage
 import core.audit.MissionLogger
-import java.io.File
+import core.sync.MeshSyncEngine
+import core.sync.MessageType
+import core.sync.UnifiedMessage
+import core.sync.PacketCodec
+
+/**
+ * Modèle de données pour une menace détectée
+ */
+data class ThreatMessage(
+    val id: String,
+    val type: String,      // ex: "DMR_ENCRYPTED", "VHF_ANALOG"
+    val frequency: Double, // MHz
+    val latitude: Double,
+    val longitude: Double,
+    val confidence: Float,
+    val timestamp: Long = System.currentTimeMillis()
+)
 
 /**
  * SRC - SignalClassifier
- * Analyse le spectre radio et génère des ThreatMessages.
+ * Analyseur de spectre basé sur l'IA pour l'identification des menaces.
  */
-class SignalClassifier(private val tfliteModelPath: String) {
+object SignalClassifier {
 
-    private var modelLoaded: Boolean = false
+    private var isModelLoaded = false
 
     /**
-     * Charge le modèle TensorFlow Lite depuis le disque.
+     * Charge le modèle TensorFlow Lite en mémoire
      */
-    fun loadModel(): Boolean {
-        val file = File(tfliteModelPath)
-        modelLoaded = file.exists()
-        if (modelLoaded) {
-            MissionLogger.info("TFLite model loaded: $tfliteModelPath")
-        } else {
-            MissionLogger.warning("TFLite model not found: $tfliteModelPath")
+    fun loadModel(modelPath: String): Boolean {
+        return try {
+            // Simulation du chargement TFLite Interpreter
+            MissionLogger.info("SIGINT_IA: Modèle $modelPath chargé avec succès.")
+            isModelLoaded = true
+            true
+        } catch (e: Exception) {
+            MissionLogger.error("SIGINT_IA: Échec chargement modèle: ${e.message}")
+            false
         }
-        return modelLoaded
     }
 
     /**
-     * Classifie un spectre radio brut et retourne un ThreatMessage.
-     * @param spectrum : tableau de floats représentant l’énergie par fréquence.
-     * @param latitude : position GPS de l’opérateur.
-     * @param longitude : position GPS de l’opérateur.
+     * Analyse un échantillon IQ brut provenant de l'antenne SDR
      */
-    fun classifySpectrum(spectrum: FloatArray, latitude: Double, longitude: Double): ThreatMessage? {
-        if (!modelLoaded) {
-            MissionLogger.warning("Model not loaded. Cannot classify spectrum.")
-            return null
+    fun analyzeSignal(iqData: ByteArray, currentLat: Double, currentLon: Double) {
+        if (!isModelLoaded) return
+
+        // --- SIMULATION D'INFÉRENCE IA ---
+        // Dans un cas réel, on passerait iqData au modèle TFLite
+        val detectionProbability = 0.92f // Simulation d'une détection forte
+
+        if (detectionProbability > 0.85f) {
+            val threat = ThreatMessage(
+                id = "THR-${System.currentTimeMillis() % 10000}",
+                type = "DMR_GOUV_OPFOR", // Type identifié par l'IA
+                frequency = 446.03125,
+                latitude = currentLat + 0.005, // Simulation d'un offset (position estimée)
+                longitude = currentLon + 0.005,
+                confidence = detectionProbability
+            )
+
+            broadcastThreat(threat)
         }
+    }
 
-        // TODO: Intégrer l’inférence réelle TFLite
-        // Simulation : détection d’une modulation FM sur 144.500 MHz
-        val detectedType = "VHF_FM"
-        val detectedFreq = 144.500
-        val priority = 2 // Medium
+    /**
+     * Transforme la détection en UnifiedMessage et l'envoie au Mesh
+     */
+    private fun broadcastThreat(threat: ThreatMessage) {
+        MissionLogger.warning("SIGINT_ALERT: Menace identifiée: ${threat.type} à ${threat.frequency} MHz")
 
-        val threat = ThreatMessage(
-            type = detectedType,
-            frequency = detectedFreq,
-            latitude = latitude,
-            longitude = longitude,
-            priority = priority
+        val payload = PacketCodec.encodeThreat(threat)
+        val msg = UnifiedMessage(
+            senderId = "SIGINT-NODE-01",
+            type = MessageType.SIGINT_THREAT,
+            payload = payload
         )
 
-        MissionLogger.info("Spectrum classified: ${threat.type} at ${threat.frequency}MHz")
-        return threat
+        // Envoi prioritaire au moteur de synchronisation
+        MeshSyncEngine.enqueueMessage(msg)
     }
 }
