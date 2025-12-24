@@ -77,3 +77,38 @@
 - **Exemple Makefile** : `make build && make test`.  
 
 ##############################################################
+
+##############################################################
+# 📘 Manuel Technique & Mode d’Emploi – Module de Démonstration (run_demo.sh)
+##############################################################
+
+## 1. Objet
+Le script `run_demo.sh` est conçu pour valider l’ensemble de la chaîne OODA en environnement de tester la fusion **BFT + SIGINT** et la résilience du système sans matériel SDR.  
+
+--------------------------------------------------------------
+
+## 2. Fonctionnalités Démontrées
+
+### 2.1 Boot Sécurisé
+- Vérifie la présence et l’intégrité des clés (`master.key`).  
+- Vérifie la configuration du **Geofencing**.  
+- Refus de démarrage si l’une des conditions est invalide.  
+
+### 2.2 Fusion Visuelle (Demo Mode)
+En mode `--demo-mode`, `Main.kt` alimente automatiquement le **FusionOverlay** avec :  
+- 🔵 **Icône Bleue (BRAVO-02)** → Position alliée via BFT.  
+- 🔴 **Cercle Rouge (Menace DMR)** → Signal SIGINT détecté.  
+- 🟢 **Icône Verte (Opérateur)** → Position propre.  
+
+### 2.3 Résilience du Mesh
+- Simulation de réception d’un **UnifiedMessage**.  
+- L’UI se met à jour automatiquement, sans intervention humaine.  
+- Démonstration de la robustesse du réseau distribué.  
+
+--------------------------------------------------------------
+
+## 3. Procédure d’Utilisation
+1. Compiler et préparer `Main.kt`.  
+2. Lancer le script avec :  
+   ```bash
+   ./run_demo.sh --demo-mode
