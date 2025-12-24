@@ -15,15 +15,15 @@ object FisintTest {
         SyncWorker.startListening()
 
         val profiles = listOf(
-            FisintProfile("DRONE_TELEMETRY_MAVLINK", 100, "FHSS", "ISM_2.4GHZ", 3)
+            FisintProfile("DRONE_TELEMETRY_LINK", 100, "GFSK", "ISM_2.4GHZ", 3)
         )
         val analyzer = FisintAnalyzer(profiles)
 
-        // Simulation d'un signal cadencé à 100ms sur la bande ISM
-        println("[TEST] Simulation télémétrie : Cadence 100ms détectée...")
-        analyzer.analyzeTraffic(100, "ISM_2.4GHZ")
+        // Simulation d'une détection à 101ms (dans la marge de tolérance)
+        println("[TEST] Simulation de télémétrie périodique : 101ms détectés...")
+        analyzer.analyze(101, "ISM_2.4GHZ")
 
-        Thread.sleep(1000)
+        Thread.sleep(1500)
         MeshSyncEngine.stopEngine()
         MissionLogger.info("=== [TEST FISINT COMPLETED] ===")
     }
