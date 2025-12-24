@@ -1,12 +1,24 @@
 package sigint.fisint
 
-data class FisintEvent(val frequencyMHz: Double, val cadenceMs: Long, val rssiDbm: Double, val timestamp: Long)
+import sigint.audit.LogManager
+import sigint.core.EventBus
 
-class FisintAnalyzer {
-    fun detect(events: List<Pair<Double, Double>>): List<FisintEvent> {
-        // Exemple: détection de transmissions périodiques
-        return events.filter { it.second > -80.0 }.map {
-            FisintEvent(it.first, cadenceMs = 1000L, rssiDbm = it.second, timestamp = System.currentTimeMillis())
+class FisintAnalyzer(private val profiles: List<FisintProfile>) {
+
+    fun analyzeTraffic(observedCadenceMs: Long, detectedBand: String) {
+        val match = profiles.find { 
+            observedCadenceMs in (it.cadenceMs - 10)..(it.cadenceMs + 10) && it.frequencyBand == detectedBand 
+        }
+
+        if (match != null) {
+            LogManager.info("FISINT_MATCH: Flux technique identifié -> ${match.name}")
+            EventBus.publish("FISINT_DETECTION", mapOf(
+                "type" to match.name,
+                "period" to observedCadenceMs,
+                "priority" to match.threatLevel
+            ))
+        } else {
+            LogManager.info("FISINT_SCAN: Transmission périodique détectée ($observedCadenceMs ms) - Profil inconnu.")
         }
     }
 }
