@@ -1,1 +1,19 @@
+{
+  "profiles": [
+    {
+      "name": "DRONE_TELEMETRY_MAVLINK",
+      "cadenceMs": 100,
+      "modulation": "FHSS",
+      "frequencyBand": "ISM_2.4GHZ",
+      "threatLevel": 3
+    },
+    {
+      "name": "SCADA_REMOTE_TERMINAL",
+      "cadenceMs": 5000,
+      "modulation": "FSK",
+      "frequencyBand": "VHF_DATA",
+      "threatLevel": 2
+    }
+  ]
+}
 
