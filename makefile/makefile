@@ -14,10 +14,9 @@ all: build harden test
 
 # --- [ PHASE 1 : CONSTRUCTION ] ---
 build:
-	@echo "🛠️  Compilation du système SIGINT..."
-	@mkdir -p $(BUILD_DIR)
-	# Commande de build réelle (ex: kotlinc, go build, etc.)
-	@echo "[OK] Binaire généré dans $(BIN)"
+	@echo "🛠️  Compilation du système SRC..."
+	@mkdir -p build
+	kotlinc src/Main.kt core/**/*.kt bft/**/*.kt services/**/*.kt ui/**/*.kt -include-runtime -d build/sigint-engine.jar
 
 # --- [ PHASE 2 : SÉCURISATION ] ---
 harden:
