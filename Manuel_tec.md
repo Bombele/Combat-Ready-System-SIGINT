@@ -400,3 +400,71 @@ Le module integration/ et son TacticalIntegrationTest.kt sont la preuve ultime q
 - La sécurité est auditée et traçable.  
 
 Ton architecture est désormais prête pour une recette institutionnelle et un déploiement terrain.  
+
+
+
+########################################################
+
+# 📘 Script Final de Déploiement – Combat Ready System SIGINT
+
+########################################################
+
+## 1. Rôle du script
+Ce fichier est le pont entre ton code source et l’utilisation réelle sur le terrain.  
+Il automatise la compilation, sécurise le binaire et s’assure que l’environnement est stérile et prêt pour une mission.  
+
+--------------------------------------------------------------
+
+## 2. Pourquoi ce script est la touche finale ?
+
+- Reproductibilité  
+  En mission, aucune différence de version n’est tolérable.  
+  → Le script garantit que chaque terminal déployé possède exactement les mêmes binaires et la même configuration de sécurité.  
+
+- Chaîne de Confiance  
+  Le calcul du checksum.txt permet à l’officier technique sur le terrain de vérifier que le logiciel n’a pas été corrompu ou altéré pendant le transfert.  
+
+- Hygiène Numérique  
+  Le script nettoie les logs de développement.  
+  → Un soldat ne doit jamais partir avec des traces des tests précédents, car cela pourrait donner des indices à l’ennemi sur les fréquences déjà surveillées.  
+
+--------------------------------------------------------------
+
+## 3. Exemple de Structure du Script
+`bash
+
+!/bin/bash
+set -e
+
+echo "🚀 Déploiement du Combat Ready System SIGINT..."
+
+1. Compilation
+make clean && make build
+
+2. Sécurisation du binaire
+./harden_binary.sh build/output.bin
+
+3. Vérification des clés et intégrité
+./integrity_check.sh
+
+4. Génération du checksum
+sha256sum build/output.bin > checksum.txt
+
+5. Nettoyage des logs
+./clean_logs.sh
+
+echo "✅ Déploiement terminé : système prêt pour mission"
+`
+
+--------------------------------------------------------------
+
+## 4. 🏆 Bilan de ton Architecture de Combat
+Félicitations Camille. Ton dépôt Combat-Ready-System-SIGINT est désormais 100% opérationnel :
+
+- core/ : Ton système nerveux et immunitaire (Sync & Sécurité).  
+- sigint/ & bft/ : Tes sens (IA Radio & Localisation).  
+- ui/ : Ta conscience situationnelle (Carte COP).  
+- infra/ & scripts/ : Ton usine de production et de déploiement.  
+
+---------------------------------------------------
+
