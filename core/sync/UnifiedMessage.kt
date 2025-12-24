@@ -1,9 +1,7 @@
 package core.sync
 
-import core.security.KeyVault
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import java.util.*
 
 /**
  * Types de données circulant sur le réseau Mesh
@@ -18,12 +16,13 @@ enum class MessageType {
 /**
  * SRC - UnifiedMessage
  * Enveloppe unique pour le transport sécurisé entre BFT et SIGINT.
+ * Payload polymorphe : peut contenir BFTPosition, ThreatMessage, etc.
  */
 data class UnifiedMessage(
     val senderId: String,
     val type: MessageType,
     val timestamp: Long = System.currentTimeMillis(),
-    val payload: ByteArray,     // Données chiffrées (BFT ou SIGINT)
+    val payload: ByteArray,     // Données sérialisées (CBOR/Protobuf)
     var signature: String = ""  // HMAC-SHA256
 ) {
     /**
@@ -38,7 +37,7 @@ data class UnifiedMessage(
     }
 
     /**
-     * Vérifie si le message reçu n'a pas été altéré par l'ennemi
+     * Vérifie si le message reçu n'a pas été altéré
      */
     fun verify(secretKey: ByteArray): Boolean {
         val expectedSignature = signAndReturn(secretKey)
