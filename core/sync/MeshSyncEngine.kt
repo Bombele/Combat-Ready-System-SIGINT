@@ -1,116 +1,75 @@
 package core.sync
 
 import core.audit.MissionLogger
-import java.util.*
-
-/**
- * Structure de donnée compacte pour l'échange de menaces SIGINT
- */
-data class ThreatMessage(
-    val id: String = UUID.randomUUID().toString(),
-    val type: String,        // ex: "MOTOROLA_DMR", "THURAYA_SAT"
-    val frequency: Double,   // MHz
-    val latitude: Double,
-    val longitude: Double,
-    val priority: Int,       // 1 (Haut) à 3 (Bas)
-    val timestamp: Long = System.currentTimeMillis()
-)
+import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * SRC - MeshSyncEngine
- * Gère la synchronisation Store-and-Forward entre unités SIGINT.
+ * Moteur de synchronisation P2P pour transporter UnifiedMessage (BFT, SIGINT, etc.)
  */
 object MeshSyncEngine {
 
-    // Cache local des menaces non encore synchronisées
-    private val localOutbox = mutableListOf<ThreatMessage>()
-    // Historique pour éviter les doublons
-    private val knownMessageIds = mutableSetOf<String>()
+    // File de messages avec priorisation
+    private val messageQueue = PriorityBlockingQueue<UnifiedMessage>(100, compareBy { it.typePriority() })
+    private val isRunning = AtomicBoolean(false)
 
     /**
-     * Ajoute une menace détectée par l'IA locale au cache de synchronisation
+     * Démarre le moteur Mesh
      */
-    fun enqueueThreat(message: ThreatMessage) {
-        if (!knownMessageIds.contains(message.id)) {
-            localOutbox.add(message)
-            knownMessageIds.add(message.id)
-            MissionLogger.info("Threat enqueued for mesh sync: ${message.type} at ${message.frequency}MHz")
+    fun startEngine() {
+        if (isRunning.get()) {
+            MissionLogger.warning("MESH_ENGINE: Already running.")
+            return
         }
-    }
+        isRunning.set(true)
+        MissionLogger.info("MESH_ENGINE: Starting...")
 
-    /**
-     * Fonction appelée lorsqu'un pair (autre soldat) est détecté via Wi-Fi Direct ou LoRa
-     */
-    fun onPeerDetected(adapter: TransportAdapter) {
-        MissionLogger.info("Mesh peer detected. Synchronizing...")
-        
-        // 1. Envoyer nos messages locaux (Priorité 1 d'abord)
-        localOutbox.sortedBy { it.priority }.forEach { msg ->
-            val success = adapter.send(msg)
-            if (success) {
-                // Optionnel : marquer comme envoyé
-            }
-        }
-
-        // 2. Recevoir les messages du pair
-        adapter.receive { remoteMsg ->
-            if (!knownMessageIds.contains(remoteMsg.id)) {
-                processIncomingThreat(remoteMsg)
-            }
-        }
-    }
-
-    private fun processIncomingThreat(msg: ThreatMessage) {
-        knownMessageIds.add(msg.id)
-        MissionLogger.warning("New threat received via Mesh: ${msg.type} from nearby unit")
-        // TODO: Mettre à jour la carte tactique (ui/map)
-    }
-}
-
-/**
- * Interface pour les différents types de transport (Wi-Fi Direct, LoRa, Bluetooth)
- */
-interface TransportAdapter {
-    fun send(msg: ThreatMessage): Boolean
-    fun receive(handler: (ThreatMessage) -> Unit)
-}
-
-import java.util.PriorityQueue
-
-object MeshSyncEngine {
-    // Utilisation d'une PriorityQueue pour que la priorité 1 (CRITICAL) sorte toujours en premier
-    private val localOutbox = PriorityQueue<ThreatMessage> { m1, m2 -> m1.priority.compareTo(m2.priority) }
-    private val knownMessageIds = mutableSetOf<String>()
-
-    fun enqueueThreat(message: ThreatMessage) {
-        synchronized(this) {
-            if (!knownMessageIds.contains(message.id)) {
-                localOutbox.add(message)
-                knownMessageIds.add(message.id)
-                MissionLogger.info("Priority ${message.priority} threat enqueued.")
-            }
-        }
-    }
-
-    fun onPeerDetected(adapter: TransportAdapter) {
-        synchronized(this) {
-            while (localOutbox.isNotEmpty()) {
-                val msg = localOutbox.peek() // On regarde le plus prioritaire
-                if (adapter.send(msg)) {
-                    localOutbox.poll() // Succès : on le retire de la file
-                    MissionLogger.info("Sync success: ${msg.id}")
-                } else {
-                    break // Échec d'envoi (pair déconnecté), on garde le reste pour plus tard
+        Thread {
+            while (isRunning.get()) {
+                try {
+                    val msg = messageQueue.take()
+                    transmit(msg)
+                } catch (e: Exception) {
+                    MissionLogger.error("MESH_ENGINE_LOOP: ${e.message}")
                 }
             }
+        }.start()
+    }
+
+    /**
+     * Arrête le moteur Mesh
+     */
+    fun stopEngine() {
+        isRunning.set(false)
+        MissionLogger.info("MESH_ENGINE: Stopped.")
+    }
+
+    /**
+     * Ajoute un message dans la file
+     */
+    fun enqueueMessage(msg: UnifiedMessage) {
+        messageQueue.put(msg)
+        MissionLogger.info("MESH_QUEUE: Message enqueued (${msg.type}) from ${msg.senderId}")
+    }
+
+    /**
+     * Transmission simulée (à remplacer par WifiDirectAdapter / P2P)
+     */
+    private fun transmit(msg: UnifiedMessage) {
+        MissionLogger.info("MESH_TX: Transmitting ${msg.type} from ${msg.senderId}")
+        // Ici tu brancheras l’adaptateur réseau réel
+    }
+
+    /**
+     * Définition des priorités
+     */
+    private fun UnifiedMessage.typePriority(): Int {
+        return when (this.type) {
+            MessageType.SIGINT_THREAT -> 1   // Critique
+            MessageType.TACTICAL_ORDER -> 2 // Important
+            MessageType.BFT_POSITION -> 3   // Routine
+            MessageType.SYSTEM_STATUS -> 4  // Info
         }
     }
-}
-
-// Dans la fonction qui reçoit les messages du réseau
-fun onMessageReceived(msg: UnifiedMessage) {
-    // 1. Log et vérification sécurité (déjà fait)
-    
-    // 2. Envoi à l'interface pour mise à jour en temps réel
-    FusionOverlay.processIncomingMessage(msg)
 }
