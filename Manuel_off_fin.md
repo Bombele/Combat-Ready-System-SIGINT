@@ -1,12 +1,12 @@
-#​🛡️ Manuel de Doctrine : SIGINT
+#​ 🛡️ Manuel de Doctrine : SIGINT
 
- ##Financier & Capacité Offensive
+ ## Financier & Capacité Offensive
 
 ​Classification : SECRET DÉFENSE (SOUVERAINETÉ NATIONALE)
 Unité : État-Major Général - Commandement du Cyberespace
 Opération : COMBAT MODE - Neutralisation des Flux Hostiles
 
-##PROJET : Combat-Ready-System-SIGINT
+## PROJET : Combat-Ready-System-SIGINT
 COMPOSANTE : Capacité Numérique Offensive Souveraine (FARDC)
 CLASSIFICATION : TRÈS SECRET
 Modes opérationnels – SIGINT Combat-Ready
