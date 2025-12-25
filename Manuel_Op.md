@@ -1324,3 +1324,53 @@ Elle donne au système COMINT la capacité de mesurer la puissance réelle des s
 - **Fiabilité accrue** : réduction des faux positifs, meilleure confiance dans les alertes.  
 - **Interopérabilité** : adaptation à toutes les antennes et environnements.  
 - **Institutionnalisation** : module DSP documenté et intégré, prêt pour adoption officielle.
+
+## 🎙️ ComintDecoder.kt – Démultiplexage & Décodage COMINT
+
+### Objectif
+Le module **ComintDecoder.kt** transforme les échantillons IQ bruts captés par l’antenne SDR en flux audio ou en métadonnées numériques.  
+Il constitue la partie la plus complexe du COMINT, permettant de passer du signal brut à l’information exploitable, qu’il s’agisse de voix tactiques ou de données numériques.
+
+---
+
+### Caractéristiques "Combat‑Ready"
+
+#### Discrimination de phase
+- Décodage FM basé sur **atan2**.  
+- Extrêmement robuste contre le bruit et les interférences.  
+- Essentiel dans un environnement de combat saturé de brouillage.
+
+#### Multimodal
+- Architecture extensible : chaque protocole est une fonction indépendante.  
+- Support initial : **NFM (Narrow Band FM)**, standard mondial pour les communications tactiques voix (talkies‑walkies, radios militaires).  
+- Extensible à d’autres protocoles : **DMR, P25, TETRA**, etc.  
+- Permet une évolution progressive sans modifier la structure globale.
+
+#### Priorisation
+- Si le décodeur extrait du **texte** (ex. “OPFOR_UNIT”), le système déclenche une **alerte visuelle immédiate** sur l’interface FusionOverlay.  
+- Si le décodeur extrait une **voix**, l’information reste discrète, évitant la surcharge cognitive de l’opérateur.  
+- Permet une hiérarchisation intelligente des alertes.
+
+---
+
+### Intégration avec ComintAnalyzer.kt
+- **Détection** : ComintAnalyzer identifie un signal et utilise ComintUtils pour vérifier sa qualité (puissance, SNR).  
+- **Décodage** : ComintAnalyzer appelle ComintDecoder pour extraire l’information (audio ou métadonnées).  
+- **Action** :  
+  - Flux audio → écoute discrète.  
+  - Métadonnées → alerte immédiate sur FusionOverlay.  
+
+---
+
+### Exemple de scénario
+- **Situation** : une unité capte un signal FM fort à ‑40 dBm.  
+- **Action** : ComintAnalyzer valide la qualité via ComintUtils, puis demande à ComintDecoder de décoder en NFM.  
+- **Résultat** : le flux audio révèle une communication tactique ennemie. Si un mot‑clé critique est détecté (“OPFOR_UNIT”), une alerte visuelle est déclenchée sur FusionOverlay.  
+
+---
+
+### Valeur opérationnelle (FARDC)
+- **Supériorité technique** : robustesse du décodage FM contre le bruit.  
+- **Interopérabilité** : architecture multimodale, extensible à tous les protocoles tactiques.  
+- **Priorisation intelligente** : alertes visuelles immédiates pour les menaces critiques, discrétion pour les voix.  
+- **Institutionnalisation** : module documenté et intégré, prêt pour adoption officielle.
