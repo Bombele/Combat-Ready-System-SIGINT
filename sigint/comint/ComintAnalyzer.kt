@@ -33,3 +33,20 @@ fun processCapture(buffer: ByteArray) {
         // Lancer le décodage...
     }
 }
+class ComintAnalyzer(private val decoder: ComintDecoder) {
+
+    fun handleIncomingSignal(buffer: ByteArray, freqMHz: Double) {
+        val snr = ComintUtils.estimateSnr(buffer)
+
+        if (snr > 15.0) { // Signal assez clair pour être décodé
+            val result = decoder.decode(buffer, "NFM")
+            
+            if (result.startsWith("DATA_DECODED")) {
+                LogManager.warn("ALERTE_INTEL: Texte intercepté sur $freqMHz MHz -> $result")
+                // Envoi automatique vers le Mesh pour affichage sur la carte
+            } else {
+                LogManager.info("INTERCEPTION: Voix détectée sur $freqMHz MHz")
+            }
+        }
+    }
+}
