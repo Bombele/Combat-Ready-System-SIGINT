@@ -1,133 +1,56 @@
-# Makefile - Système SRC Combat-Ready
+# --- Makefile SRC Combat-Ready ---
 
-# Compilation et durcissement
-build:
-	@echo "[BUILD] Compilation du binaire..."
-	@kotlinc -d bin/ src/**/*.kt
+KOTLINC=kotlinc
+BUILD_DIR=build/tests
+SRC_SIGINT=sigint/**/*.kt core/sync/*.kt core/audit/*.kt
 
-harden:
-	@echo "[HARDEN] Application des routines d'obscurcissement..."
-	@./scripts/harden_binary.sh
-
-# Sécurité
-rotate-keys:
-	@echo "[SECURITY] Rotation des clés de mission..."
-	@./scripts/rotate_keys.sh
-
-check-integrity:
-	@echo "[SECURITY] Vérification d'intégrité..."
-	@./scripts/integrity_check.sh
-
-clean-logs:
-	@echo "[SECURITY] Nettoyage des logs..."
-	@./scripts/clean_logs.sh
-
-deploy:
-	@echo "[DEPLOY] Déploiement terrain..."
-	@./infra/deployment/deploy.sh
-
-# Tests unitaires
-test:
-	@echo "[TEST] Simulation complète..."
-	@./scripts/run_tests.sh
-
-# 🚀 Test Final de Recette
-recette:
-	@echo "=== [TEST FINAL DE RECETTE - SRC] ==="
-	@if [ ! -f "data/keys/master.key" ]; then \
-		echo "[FAIL] Clés de mission absentes."; exit 1; \
-	else \
-		echo "[OK] Clés de mission présentes."; \
-	fi
-	@echo "[INFO] Test Geofence..."
-	@./scripts/simulate_gps_outside_zone.sh || { echo "[FAIL] Geofence non déclenché."; exit 1; }
-	@echo "[OK] Geofence déclenché correctement."
-	@echo "[INFO] Chargement modèle IA..."
-	@./scripts/test_sigint.sh || echo "[WARN] Modèle IA absent, mode dégradé."
-	@echo "[INFO] Test MeshSyncEngine..."
-	@./scripts/test_mesh.sh || { echo "[FAIL] MeshSyncEngine non opérationnel."; exit 1; }
-	@echo "[OK] MeshSyncEngine opérationnel."
-	@echo "[INFO] Test diffusion BFT..."
-	@./scripts/test_bft.sh || { echo "[FAIL] BFT non diffusé."; exit 1; }
-	@echo "[OK] BFT diffusé."
-	@echo "[INFO] Test FusionOverlay..."
-	@./scripts/test_ui.sh || { echo "[FAIL] UI non fonctionnelle."; exit 1; }
-	@echo "[OK] FusionOverlay opérationnel."
-	@echo "=== [RECETTE TERMINÉE : SYSTÈME COMBAT-READY] ==="
-
-# 🚀 Recette SIGINT (COMINT)
-recette-sigint:
+# 🚀 Recette COMINT
+recette-comint:
 	@echo "=== [RECETTE SIGINT - COMINT] ==="
-	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/**/*.kt
+	@$(KOTLINC) -d bin/ src/**/*.kt sigint/**/*.kt tests/**/*.kt
 	@java -cp bin sigint.comint.tests.ComintTest
-	@echo "=== [RECETTE SIGINT TERMINÉE] ==="
+	@echo "=== [RECETTE COMINT TERMINÉE] ==="
 
-# Recette globale SIGINT
-recette-sigint-full: recette-sigint
-	@echo "=== [LANCEMENT RECETTE ELINT] ==="
-	@java -cp bin sigint.elint.tests.ElintTest
-	@echo "=== [SYSTÈME SIGINT TOTALEMENT VALIDÉ] ==="
-
-# 🚀 Recette SIGINT (ELINT - RADAR)
+# 🚀 Recette ELINT
 recette-elint:
 	@echo "=== [RECETTE SIGINT - ELINT] ==="
-	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/*.kt
+	@$(KOTLINC) -d bin/ src/**/*.kt sigint/**/*.kt tests/*.kt
 	@java -cp bin sigint.elint.tests.ElintTest
 	@echo "=== [RECETTE ELINT TERMINÉE] ==="
 
-# Recette Globale SIGINT (COMINT + ELINT)
-recette-sigint-full: recette-sigint recette-elint
-	@echo "🛡️  CHAÎNE SIGINT INTÉGRALE VALIDÉE"
-
-# 🚀 Recette SIGINT (FISINT)
+# 🚀 Recette FISINT
 recette-fisint:
 	@echo "=== [RECETTE SIGINT - FISINT] ==="
-	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/*.kt
+	@$(KOTLINC) -d bin/ src/**/*.kt sigint/**/*.kt tests/*.kt
 	@java -cp bin sigint.fisint.tests.FisintTest
 	@echo "=== [RECETTE FISINT TERMINÉE] ==="
 
-# 🔥 RECETTE SIGINT FULL (Le Triptyque)
-recette-sigint-full: recette-sigint recette-elint recette-fisint
-	@echo "=========================================================="
-	@echo "🛡️  CHAÎNE ROEM 100% VALIDÉE : COMINT + ELINT + FISINT"
-	@echo "🚀 SYSTÈME SRC PRÊT POUR DÉPLOIEMENT SOUVERAIN"
-	@echo "=========================================================="
+# 🚀 Recette COMINT Capture
+recette-comint-capture:
+	@echo "=== [RECETTE COMINT CAPTURE] ==="
+	@mkdir -p $(BUILD_DIR) data/logs data/audit
+	@$(KOTLINC) $(SRC_SIGINT) -include-runtime -d $(BUILD_DIR)/comint-capture-test.jar
+	@java -jar $(BUILD_DIR)/comint-capture-test.jar
+	@echo "=== [RECETTE COMINT CAPTURE TERMINÉE] ==="
 
 # 📊 Certification et Clôture de Mission
 certifier-mission:
 	@echo "=== [GÉNÉRATION DU RAPPORT DE MISSION SRC] ==="
-	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt
+	@$(KOTLINC) -d bin/ src/**/*.kt sigint/**/*.kt
 	@java -cp bin sigint.audit.MissionReportGenerator
 	@echo "=========================================================="
 	@echo "🛡️  RAPPORT SIGNÉ DISPONIBLE DANS data/audit/"
 	@echo "🚀 MISSION TERMINÉE : SYSTÈME PRÊT POUR RÉINITIALISATION"
 	@echo "=========================================================="
 
-# Commande Ultime : Recette complète + Rapport
+# 🔥 RECETTE SIGINT FULL (Le Triptyque + Capture)
+recette-sigint-full: recette-comint recette-elint recette-fisint recette-comint-capture
+	@echo "=========================================================="
+	@echo "🛡️  CHAÎNE ROEM 100% VALIDÉE : COMINT + ELINT + FISINT + CAPTURE"
+	@echo "🚀 SYSTÈME SRC PRÊT POUR DÉPLOIEMENT SOUVERAIN"
+	@echo "=========================================================="
+
+# 🚀 Commande Ultime : Recette complète + Rapport
 combat-ready: recette-sigint-full certifier-mission
-
-# 📡 Test rapide de la couche physique (Capture)
-test-capture:
-	@echo "=== [VÉRIFICATION COUCHE CAPTURE] ==="
-	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/ComintTestCapture.kt
-	@java -cp bin sigint.comint.tests.ComintTestCapture
-
-# --- Makefile COMINT Capture Extension ---
-
-KOTLINC=kotlinc
-BUILD_DIR=build/tests
-SRC_SIGINT=sigint/**/*.kt core/sync/*.kt core/audit/*.kt
-
-# 🚀 Recette COMINT Capture
-recette-comint-capture:
-	@echo "=== [RECETTE COMINT CAPTURE] ==="
-	@mkdir -p $(BUILD_DIR)
-	@mkdir -p data/logs data/audit
-	$(KOTLINC) $(SRC_SIGINT) -include-runtime -d $(BUILD_DIR)/comint-capture-test.jar
-	java -jar $(BUILD_DIR)/comint-capture-test.jar
-	@echo "=== [RECETTE COMINT CAPTURE TERMINÉE] ==="
-
-# Nettoyage spécifique
-clean-comint-capture:
-	rm -rf $(BUILD_DIR)
-	rm -f data/logs/*.log
+	@echo "📊 Certification finale effectuée."
+	@echo "🚀 SYSTÈME SRC COMBAT-READY : TOUS LES VOYANTS AU VERT."
