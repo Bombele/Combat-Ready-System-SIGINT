@@ -105,3 +105,9 @@ certifier-mission:
 
 # Commande Ultime : Recette complète + Rapport
 combat-ready: recette-sigint-full certifier-mission
+
+# 📡 Test rapide de la couche physique (Capture)
+test-capture:
+	@echo "=== [VÉRIFICATION COUCHE CAPTURE] ==="
+	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/ComintTestCapture.kt
+	@java -cp bin sigint.comint.tests.ComintTestCapture
