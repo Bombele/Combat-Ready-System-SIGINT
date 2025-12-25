@@ -111,3 +111,23 @@ test-capture:
 	@echo "=== [VÉRIFICATION COUCHE CAPTURE] ==="
 	@kotlinc -d bin/ src/**/*.kt sigint/**/*.kt tests/ComintTestCapture.kt
 	@java -cp bin sigint.comint.tests.ComintTestCapture
+
+# --- Makefile COMINT Capture Extension ---
+
+KOTLINC=kotlinc
+BUILD_DIR=build/tests
+SRC_SIGINT=sigint/**/*.kt core/sync/*.kt core/audit/*.kt
+
+# 🚀 Recette COMINT Capture
+recette-comint-capture:
+	@echo "=== [RECETTE COMINT CAPTURE] ==="
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p data/logs data/audit
+	$(KOTLINC) $(SRC_SIGINT) -include-runtime -d $(BUILD_DIR)/comint-capture-test.jar
+	java -jar $(BUILD_DIR)/comint-capture-test.jar
+	@echo "=== [RECETTE COMINT CAPTURE TERMINÉE] ==="
+
+# Nettoyage spécifique
+clean-comint-capture:
+	rm -rf $(BUILD_DIR)
+	rm -f data/logs/*.log
