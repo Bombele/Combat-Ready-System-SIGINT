@@ -1,0 +1,32 @@
+name: Security & Quality Audit
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Vérifie qu'aucune clé privée ou mot de passe n'est en clair dans le code
+      - name: Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+
+      # Analyse statique du code pour détecter les vulnérabilités (Bandit)
+      - name: Security Scan (Bandit)
+        run: |
+          pip install bandit
+          bandit -r ./core ./vectors ./connectivity
