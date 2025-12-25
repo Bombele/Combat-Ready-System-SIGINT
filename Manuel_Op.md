@@ -1202,3 +1202,65 @@ Ce rapport constitue la pièce finale du puzzle technologique : il centralise le
 - **Phase 2 (terminée)** : SIGINT IA & Mesh (capteurs et voix).  
 - **Phase 3 (terminée)** : BFT & Fusion UI (coordination et vision).  
 - **Phase 4 (finalisée)** : AAR automatisé (décision et transmission stratégique).
+
+## 📑 ComplianceMatrix.json – Auto‑Certification & Conformité
+
+### Objectif
+Le fichier **ComplianceMatrix.json** est le référentiel de certification du système.  
+Il définit les normes de sécurité et d’audit exigées (ex. GEO‑004 pour le geofencing, ENC‑002 pour le chiffrement, LOG‑005 pour la traçabilité).  
+En le liant au **MissionReportGenerator.kt**, chaque rapport de mission (AAR) inclut désormais un **Score de Conformité**, prouvant que le système a fonctionné selon les standards militaires.
+
+---
+
+### Fonctionnement
+
+#### 1. Référentiel de certification
+- **sigint/audit/ComplianceMatrix.json** : liste des règles obligatoires (sécurité, audit, chiffrement, geofencing).  
+- Chaque règle est identifiée par un code (ex. GEO‑004, ENC‑002).  
+- Les autorités peuvent mettre à jour ce fichier pour ajouter de nouvelles normes sans modifier le code source.
+
+#### 2. Scan de conformité
+- **MissionReportGenerator.kt** intègre une fonction de scan.  
+- Compare l’état du système aux exigences du JSON.  
+- Génère un **Score de Conformité** (COMPLIANT / NON‑COMPLIANT).  
+
+#### 3. Rapport AAR enrichi
+- Chaque rapport inclut désormais :  
+  - Les détections (COMINT, ELINT, FISINT).  
+  - Les preuves signées (MissionLogger).  
+  - Le **Score de Conformité** basé sur ComplianceMatrix.json.  
+
+---
+
+### Pourquoi cette intégration change tout
+
+#### Auto‑Certification
+- Le système s’auto‑évalue en fin de mission.  
+- Exemple : si le geofence (GEO‑004) n’est pas configuré, le rapport affiche **NON‑COMPLIANT**.  
+- Le commandement est immédiatement alerté d’une faille de procédure.
+
+#### Rigueur militaire
+- Chaque détection est liée à une règle de conformité.  
+- Les preuves collectées (COMINT/ELINT/FISINT) sont juridiquement et tactiquement valides.  
+- Garantit que les opérations respectent les standards définis.
+
+#### Transparence technique
+- Le fichier **ComplianceMatrix.json** est indépendant du code source.  
+- Les autorités peuvent ajouter de nouvelles régulations (ex. chiffrement renforcé) sans recompilation.  
+- Assure une évolution continue et institutionnelle du système.
+
+---
+
+### Exemple de scénario
+- **Situation** : une unité SIGINT part en mission sans configurer le geofence.  
+- **Action** : MissionReportGenerator compile les détections et scanne la ComplianceMatrix.json.  
+- **Résultat** : le rapport final affiche **NON‑COMPLIANT (GEO‑004)**, alertant le commandement d’une faille critique.  
+
+---
+
+### Valeur opérationnelle (FARDC)
+- **Homologation** : passage du système au statut certifiable et conforme aux normes militaires.  
+- **Auto‑Certification** : chaque mission produit un rapport AAR avec score de conformité.  
+- **Rigueur & validité** : preuves collectées juridiquement et tactiquement valides.  
+- **Transparence & évolutivité** : normes mises à jour par les autorités sans modification du code.  
+- **Institutionnalisation** : adoption officielle comme système de gestion certifié.
