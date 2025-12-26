@@ -1,45 +1,91 @@
-import hashlib
-from audit_blackbox.chain_sealer import ChainSealer
+import sys
+import json
+import requests
+from datetime import datetime
+from scapy.all import *
+
+# CONFIGURATION SOUVERAINE
+SIGINT_DATABASE_URL = "http://localhost:8080/api/v1/metadata/imsi_ip_map"
+BLOCKCHAIN_NODE_URL = "https://blockchain.info/rawaddr/" # Exemple pour BTC
+STATE_COIN_ADDRESS = "1FARDC..." # Adresse de saisie de l'État
 
 class CryptoLinker:
+    """
+    Module de dé-anonymisation et de corrélation SIGINT/Blockchain.
+    Croise les adresses IP des nœuds de transaction avec les métadonnées IMSI.
+    """
     def __init__(self):
-        self.sealer = ChainSealer()
-        # Base de données locale des portefeuilles surveillés (Blacklist EM)
-        self.monitored_wallets = ["bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"]
+        self.active_targets = {}
+        print(f"[!] CryptoLinker Initialisé - Mode Offensive Actif")
 
-    def deanonymize(self, ip_address, wallet_address, imsi_id=None):
+    def get_sigint_identity(self, ip_address):
         """
-        Croise une adresse IP (SIGINT) avec une transaction Crypto.
+        Interroge la base de données SIGINT pour corréler une IP avec un IMSI/GPS.
         """
-        confidence_score = 0.0
-        
-        # 1. Vérification si le portefeuille est sur la liste noire
-        if wallet_address in self.monitored_wallets:
-            confidence_score += 60.0 # Match direct
+        try:
+            response = requests.get(f"{SIGINT_DATABASE_URL}/{ip_address}", timeout=2)
+            if response.status_code == 200:
+                return response.json() # Retourne {imsi: "...", gps: "...", user_id: "..."}
+        except Exception as e:
+            return None
+        return None
+
+    def analyze_transaction(self, wallet_address):
+        """
+        Analyse l'historique d'un portefeuille et identifie les adresses IP d'origine.
+        """
+        print(f"[*] Analyse du portefeuille : {wallet_address}")
+        try:
+            # Récupération des données blockchain
+            data = requests.get(f"{BLOCKCHAIN_NODE_URL}{wallet_address}").json()
             
-        # 2. Corrélation temporelle (Vérification si l'IP a émis vers un nœud au moment de la TX)
-        # Simulation d'un match positif
-        confidence_score += 35.0 
+            for tx in data.get('txs', []):
+                relayed_by = tx.get('relayed_by') # IP du nœud ayant propagé la TX
+                
+                if relayed_by:
+                    identity = self.get_sigint_identity(relayed_by)
+                    if identity:
+                        print(f"[🔴 TARGET IDENTIFIED] IP: {relayed_by} | IMSI: {identity['imsi']}")
+                        self.flag_target_on_dashboard(wallet_address, identity)
+                        return identity
+        except Exception as e:
+            print(f"[!] Erreur d'analyse Blockchain : {e}")
+        return None
 
-        identification = {
-            "wallet": wallet_address,
-            "ip_source": ip_address,
-            "imsi_target": imsi_id,
-            "confidence": f"{confidence_score}%",
-            "status": "IDENTIFIED" if confidence_score > 80 else "SUSPECT"
+    def flag_target_on_dashboard(self, wallet, identity):
+        """
+        Envoie les données au Tactical Monitor (CCC) pour affichage de l'icône rouge.
+        """
+        payload = {
+            "type": "CRYPTO_DEANON",
+            "wallet": wallet,
+            "imsi": identity['imsi'],
+            "coords": identity['gps'],
+            "timestamp": datetime.now().isoformat()
         }
+        # Transmission au tableau de bord via webhook interne
+        try:
+            requests.post("http://localhost:5000/api/v1/dashboard/update", json=payload)
+        except:
+            pass
 
-        # 3. Scellement de la corrélation dans la Boîte Noire
-        self.sealer.log_action("CRYPTO_DEANONYMIZATION", identification)
-        
-        return identification
+    def intercept_broadcast(self, pkt):
+        """
+        Analyse les paquets réseau en temps réel (Optical Tap) pour détecter
+        des signatures de protocoles de portefeuilles (ex: Electrum, Bitcoin P2P).
+        """
+        if pkt.haslayer(TCP) and pkt.haslayer(Raw):
+            payload = pkt[Raw].load.decode(errors='ignore')
+            # Recherche de patterns de transactions ou de signatures de wallets
+            if "blockchain.info" in payload or "electrum" in payload:
+                src_ip = pkt[IP].src
+                print(f"[!] Détection de trafic Crypto - IP Source: {src_ip}")
+                self.analyze_transaction_from_ip(src_ip)
 
-    def generate_intel_marker(self, crypto_data):
-        """Transforme l'identification en marqueur pour la carte tactique."""
-        return {
-            "lat": -2.333, # Coordonnées récupérées via le SIGINT/BFT
-            "lon": 28.567,
-            "label": f"MENACE_FINANCIÈRE: {crypto_data['confidence']}",
-            "type": "CRYPTO_NODE"
-        }
-
+# --- POINT D'ENTRÉE OPÉRATIONNEL ---
+if __name__ == "__main__":
+    linker = CryptoLinker()
+    
+    # Mode 1 : Sniffing passif sur l'interface de l'Optical Tap
+    print("[*] Lancement du sniffing sur l'interface SIGINT eth0...")
+    sniff(iface="eth0", prn=linker.intercept_broadcast, store=0)
