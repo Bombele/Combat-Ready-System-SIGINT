@@ -475,4 +475,39 @@ Le système dispose désormais de trois piliers d'action :
  * DÉCEPTION : anti_forensics (Effacement des preuves). 🛡️📡🇨🇩🚀
 
 
+## 🛠️ Architecture d'Autorisation (Offensive Bridge)
+### Objectif
+Assurer la liaison entre les vecteurs d'attaque (Python) et le cœur de décision (Kotlin). Aucune action offensive ne peut être exécutée sans une validation cryptographique du Gatekeeper.
+### Modules Associés
+ * src/main/kotlin/.../core/OffensiveBridge.kt : Contrôleur d'autorisation. Il écoute les requêtes via Socket Unix ou API REST locale et vérifie la présence des clés matérielles (HSM/Yubikey) avant de lever les barrières logicielles.
+## 💸 Opérationnalisation du Switch National (ISO 8583)
+### Objectif
+Agir réellement sur les flux financiers nationaux en s'insérant dans la chaîne de traitement monétique.
+### Configuration Critique
+ * Parsing jPOS : Le module NationalSwitchController.kt doit impérativement être compilé avec la bibliothèque jPOS pour interpréter et modifier les messages ISO 8583.
+ * Interface eth1 : Doit être configurée en mode Promiscuous pour capter l'intégralité du trafic du Switch.
+ * Furtivité Réseau : Le script connect_switch.sh doit désactiver les ICMP Redirects (via sysctl) pour empêcher le matériel bancaire de détecter le nœud d'interception.
+## 🔗 Corrélation IP/IMSI Temps Réel
+### Objectif
+Garantir que l'identité numérique attaquée correspond physiquement à la cible identifiée sur le terrain.
+### Source de Données
+ * core/sigint/identity_resolver.py : Ce module doit être connecté en direct au flux ZMQ ou Kafka de la sonde SIGINT (GGSN/PGW). Il transforme les logs de session télécom en une table de correspondance dynamique stockée sur un serveur Redis pour une réponse en microsecondes.
+## 🛡️ Activation de la Saisie (NFQUEUE)
+### Objectif
+Passer d'une simple écoute à une modification active et garantie des transactions.
+### Mécanisme de Saisie
+ * Netfilter Queue (NFQUEUE) : Contrairement au sniffing passif, cette méthode force le noyau Linux à retenir les paquets financiers dans une file d'attente.
+ * Le Script auto_seizure.py : Il interroge la file, modifie le payload (RIB de destination) et recalcule les checksums. Tant que le script ne renvoie pas un verdict "ACCEPT", le paquet n'est pas réémis, garantissant que l'ennemi ne reçoive jamais le flux original.
+## ⚡ 5. Neutralisation SCADA & Télécoms
+### Objectif
+Provoquer une paralysie totale par coupure d'énergie des relais de communication ennemis.
+### Vecteur de Frappe
+ * vectors/infra_cloud/scada_disruptor.py : Ce module s'attaque directement aux automates industriels (Protocoles Modbus/S7). Il envoie des commandes de coupure (Shutdown) aux systèmes UPS et redresseurs qui alimentent les antennes relais de l'adversaire.
+## 🏁 Bilan de Mise en Service
+Pour que le système soit 100% Opérationnel, les étapes suivantes sont obligatoires :
+ * Déploiement Redis : Indispensable pour la corrélation ultra-rapide IP/IMSI.
+ * Compilation jPOS : Nécessaire pour l'action sur le Switch National.
+ * Privilèges Root : Exécution de install.sh avec accès root pour configurer les tunnels mTLS et les files d'attente iptables.
+
+
 
