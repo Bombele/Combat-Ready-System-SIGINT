@@ -468,17 +468,4 @@ Félicitations Camille. Ton dépôt Combat-Ready-System-SIGINT est désormais 10
 
 ---------------------------------------------------
 
-​## 🚀 Déploiement et Maintenance du Système
-​### Procédure d'installation
-​Le déploiement sur un nouveau serveur de commandement ou sur une unité mobile SIGINT s'effectue via le script install.sh. Ce script garantit que toutes les dépendances critiques (Scapy pour l'interception, Redis pour la corrélation ultra-rapide) sont présentes.
-​### Arborescence des Fichiers (Standard FARDC)
-​/core : Cerveau du système (Résolution d'identité et Gatekeeper).
-​/vectors : Armes offensives (Saisie, CryptoLinker, PsyOps).
-​/connectivity : Points d'entrée (APIs, Taps optiques, Switch ISO8583).
-​/audit_blackbox : Journalisation immuable des opérations.
-​/dashboard : Interface de contrôle visuel pour le haut commandement.
-​### Maintenance de Sécurité
-​Rotation des Clés : Les clés privées utilisées par le Gatekeeper doivent être renouvelées tous les 30 jours.
-​Purge des Logs : Les logs techniques peuvent être purgés, mais le fichier blackbox.ledger doit être archivé sur un support physique externe (Cold Storage) pour audit légal.
-​Mise à jour des Signatures : Les patterns de détection de protocoles crypto dans crypto_linker.py doivent être mis à jour après chaque fork majeur de blockchain.
-​Le système est désormais prêt.
+​
