@@ -305,3 +305,27 @@ Ce mode constitue le "bras armé" du système. Son objectif est de lever l'anony
 ​Situation : Un agent infiltré tente d'utiliser le système pour détourner une petite transaction vers son compte personnel.
 ​Action : Le système enregistre l'opération, mais le ChainSealer lie l'action à son ID biométrique.
 ​Résultat : Lors de la revue hebdomadaire du registre, l'anomalie est immédiatement détectée car le compte de destination ne correspond pas à la whitelist souveraine. La preuve est gravée dans la BlackBox.
+
+## 🧠 Mode Guerre Psychologique (PsyOps Financier) – Détail ccomplet 
+### Objectif
+​Le mode PsyOps vise à transformer une perte financière en une défaite psychologique. En notifiant instantanément la cible de la saisie de ses fonds, le système crée un climat de paranoïa, de méfiance envers les intermédiaires financiers et de démoralisation au sein du commandement ennemi.
+### Modules associés
+​vectors/financial/psyops_notifier.py : Moteur d'injection de messages. Il utilise les canaux de communication interceptés (SMS, WhatsApp, notifications d'applications) pour informer la cible de l'échec de sa transaction.
+​dashboard/tactical_monitor.py : Affiche l'état d'envoi des messages de démoralisation sur le CCC.
+### Procédures de ffonctionnement
+#### 1. Déclenchement Automatique
+​Dès que le chain_sealer.py confirme que les fonds sont sécurisés sur le compte de l'État, le PsyOpsNotifier récupère l'IMSI/MSISDN de la cible pour initier la phase de contact.
+#### 2. Stratégies de Message
+​Variante A (Souveraine) : Notification officielle de saisie judiciaire (crée un sentiment d'impuissance face à l'État).
+​Variante B (Suspicion) : Envoi d'un message ambigu suggérant que le destinataire initial a collaboré avec les autorités (brise la cohésion du réseau ennemi).
+#### 3. Vecteurs d'Injection
+​Niveau Tactique : Injection de SMS via IMSI-Catcher directement sur le terminal de la cible.
+​Niveau Stratégique : Utilisation des passerelles opérateurs (SMS-C) pour un envoi massif en cas de saisiesgroupées.
+### Valeur opérationnelle (FARDC)
+​Effet de Dissuasion : Montre à l'ennemi que le cyberespace n'est plus une zone refuge pour ses capitaux.
+​Rupture des Chaînes de Confiance : Induit l'idée que les communications ou les portefeuilles sont compromis, forçant l'ennemi à cesser ses activités pour réorganiser sa sécurité.
+​Victoire Informationnelle : Affirmation de la supériorité technologique des forces de ddéfense.
+### Exemple de scénario
+​Situation : Un chef de groupe armé attend une livraison d'armes financée par un transfert Mobile Money.
+​Action : Le système saisit les fonds. 30 secondes plus tard, le chef reçoit un SMS : "Votre paiement pour l'opération X a été détourné par le Cyber-Commandement FARDC. Vos finances sont sous contrôle."
+​Résultat : La livraison est annulée, le chef soupçonne son fournisseur de l'avoir dénoncé, et l'opération ennemie est avortée par manque de confiance mutuelle.
