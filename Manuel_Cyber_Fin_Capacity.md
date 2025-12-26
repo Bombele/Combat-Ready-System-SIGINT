@@ -440,3 +440,39 @@ Le système dispose désormais d'une suite logicielle complète et intégrée :
  * Lien Infrastructure : connect_switch.sh (Tunnel de souveraineté mTLS).
 
 
+## ☁️ Mode InfraCloud-Offensive – Infiltration & Immobilisation
+### Objectif
+Le module InfraCloud-Offensive est conçu pour l'infiltration profonde des réseaux de serveurs adverses. Son but est triple : exfiltrer les renseignements critiques (plans de bataille, inventaires), paralyser les capacités de calcul de l'ennemi via le Ransomware d'État, et masquer l'opération sous l'apparence de pannes matérielles fortuites.
+### Modules associés
+ * vectors/infra_cloud/infiltration_engine.py : Gestionnaire de backdoors. Injecte un agent léger et furtif capable d'exfiltrer des données par fragmentation pour contourner les pare-feux (DPI).
+ * vectors/infra_cloud/tactical_ransom.py : Module de chiffrement réversible (déjà documenté).
+ * vectors/infra_cloud/anti_forensics.py : Outil de nettoyage et de déception. Manipule les journaux système pour effacer les traces d'intrusion.
+### Protocole Opérationnel (SOP InfraCloud)
+Le déploiement suit une séquence chronologique stricte pour garantir l'efficacité et le déni plausible.
+#### 1. Phase d'Infiltration (InfiltrationEngine)
+L'agent est injecté via le tunnel mTLS établi précédemment. Il surveille les modifications de fichiers en temps réel.
+ * Exfiltration furtive : Les fichiers sont découpés en "chunks" de 4096 octets et transmis via DNS Tunneling ou HTTPS vers le serveur c2.state-defense.cd.
+#### 2. Phase d'Action (TacticalRansom)
+Une fois les données stratégiques sécurisées dans le centre de commandement FARDC, le module de chiffrement est armé.
+ * Effet : Verrouillage instantané des bases de données logistiques au moment où l'ennemi en a le plus besoin (ex: début d'une offensive).
+#### 3. Phase de Retrait & Masquage (AntiForensics)
+C'est la phase critique pour la pérennité de l'opération.
+ * Scrubbing : Suppression des accès SSH et modification des horodatages de session.
+ * Simulated Hardware Fault : Injection de logs de type "Kernel Panic" ou "Emergency Shutdown" suite à une surchauffe fictive du processeur.
+### 🛡️ Sécurisation et Discrétion de l'Agent
+#### 1. Agent Auto-Destructible (Kill-Timer)
+Chaque agent injecté possède un Time-To-Live (TTL). Si la communication avec le centre de commandement est interrompue pendant plus de 60 minutes, l'agent exécute une routine d'auto-effacement profond (Overwriting) pour ne laisser aucune trace binaire.
+#### 2. Validation par Signature d'État
+Le serveur C2 (Command & Control) refuse systématiquement tout paquet de données exfiltrées qui ne contient pas le jeton cryptographique valide généré par le Gatekeeper. Cela empêche l'injection de fausses données par l'adversaire (Honey-pots).
+### Valeur opérationnelle (FARDC)
+ * Supériorité Informationnelle : Accès aux plans de l'ennemi avant même le début des hostilités.
+ * Paralysie Sans Traces : L'adversaire conclut à une instabilité de son matériel, ce qui l'empêche de porter plainte ou de justifier une riposte cyber.
+ * Réversibilité : Possibilité de restaurer les serveurs après la prise de contrôle physique de la zone.
+## 🏁 Bilan de l'Arsenal de Capacité Offensive Souveraine
+Le système dispose désormais de trois piliers d'action :
+ * FINANCES : NationalSwitchController & mitm_engine.
+ * INFRASTRUCTURES CLOUD : infiltration_engine & tactical_ransom.
+ * DÉCEPTION : anti_forensics (Effacement des preuves). 🛡️📡🇨🇩🚀
+
+
+
