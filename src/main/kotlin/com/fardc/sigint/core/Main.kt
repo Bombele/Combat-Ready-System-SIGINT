@@ -1,35 +1,38 @@
-package com.psc.sovereign.core
+package com.fardc.sigint.core
 
-import kotlin.system.exitProcess
-import java.util.Scanner
-
+/**
+ * Point d'entrée principal du Sovereign Core PSC.
+ * Orchestre la vérification de sécurité et le lancement des modules.
+ */
 fun main(args: Array<String>) {
     println("""
-        ==================================================
-        🛡️ SOVEREIGN-CORE-PSC v1.0.0
-        Système de Capacité Offensive Souveraine
-        ==================================================
+        ====================================================
+        🛡️  PROJECT SOVEREIGN CORE (PSC) - INITIALISATION  🛡️
+        ====================================================
     """.trimIndent())
 
+    // 1. Initialisation du contrôleur d'accès
     val gatekeeper = Gatekeeper()
-    val bridge = OffensiveBridge(gatekeeper)
 
-    // Lancement du pont de communication avec les vecteurs Python
-    Thread {
+    // 2. Vérification impérative des certificats d'État
+    if (gatekeeper.verifyStateAuth()) {
+        println("✅ Autorisation confirmée par le Haut Commandement.")
+        
+        // 3. Lancement du pont vers les capacités offensives
         try {
-            bridge.startListening()
+            val bridge = OffensiveBridge()
+            bridge.startFinancialInterception()
+            
+            println("🚀 Système opérationnel. En attente de détection de flux...")
         } catch (e: Exception) {
-            println("[ERREUR] Échec du pont PSC : ${e.message}")
+            println("❌ ERREUR CRITIQUE lors du lancement du Bridge : ${e.message}")
         }
-    }.start()
-
-    println("[CORE] Cœur PSC opérationnel et rattaché au Switch National.")
-    
-    val scanner = Scanner(System.`in`)
-    while (scanner.hasNextLine()) {
-        if (scanner.nextLine().uppercase() == "Q") {
-            println("[CORE] Arrêt sécurisé du système PSC...")
-            exitProcess(0)
-        }
+    } else {
+        println("""
+            ❌ ÉCHEC DE L'AUTHENTIFICATION SOUVERAINE
+            Le système est verrouillé pour protéger les actifs nationaux.
+            Vérifiez la présence des clés dans 'data/keys/'.
+        """.trimIndent())
+        System.exit(1)
     }
 }
