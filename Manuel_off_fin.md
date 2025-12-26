@@ -257,4 +257,31 @@ Grâce à l'intégration du CryptoLinker, le Commandant dispose d'une symbologie
  * Discipline de Commandement : Asservissement total des capacités offensives à la validation cryptographique de l'État-Major.
 
 
+## 🛡️ Mode Corrélation & Saisie Automatisée – Détail complet
+### Objectif
+Ce mode constitue le "bras armé" du système. Son objectif est de lever l'anonymat technique (IP/Crypto) pour le transformer en cible physique (IMSI/Identité) et d'exécuter la redirection forcée des fonds. Il permet un contrôle total sur les flux financiers transitant par les infrastructures nationales, même en cas de volume massif de données.
+### Modules associés
+ * core/sigint/identity_resolver.py : Moteur de corrélation en temps réel. Il maintient la "Table de Vérité" en reliant les adresses IP dynamiques aux identifiants matériels IMSI via les serveurs de bordure (Edge) des télécoms.
+ * vectors/financial/high_scale_linker.py : Optimiseur de flux à haut débit. Utilise une architecture asynchrone pour surveiller simultanément des milliers de sessions sur le backbone national.
+ * vectors/financial/auto_seizure.py : Module d'exécution offensive. Injecte le payload de redirection dans le flux TCP pour détourner les fonds vers le compte séquestre de l'État.
+### Procédures de fonctionnement (SOP/04-OFF-FIN)
+#### 1. Critères d'Engagement (Règles de filtrage)
+ * Identification : La cible doit impérativement figurer dans la Blacklist Niveau 1 (Groupes Terroristes/Rebelles).
+ * Certitude : Le score de corrélation fourni par l'IdentityResolver (IP/IMSI) doit être supérieur à 95% avant toute action d'effet.
+#### 2. Processus Opérationnel de Saisie
+ * Phase de Marquage : Le CryptoLinker détecte une transaction suspecte. L'alerte remonte au CCC avec une Icône Rouge.
+ * Validation de Commandement : L'opérateur analyse l'identité physique (IMSI) et sollicite l'autorisation du Magistrat Militaire via le module Gatekeeper.
+ * Armement du Vecteur : Après injection des clés PKI, le script auto_seizure.py se met en attente (hook) sur l'interface réseau (Fibre/Satellite).
+ * Exécution & Confirmation : Au prochain broadcast de la cible, le système substitue l'adresse de destination par celle de l'État. Un certificat de saisie est généré par le chainsealer.py.
+### Valeur opérationnelle (FARDC)
+ * Neutralisation chirurgicale : Permet de frapper le portefeuille de l'ennemi sans interrompre les services financiers civils.
+ * Dé-anonymisation tactique : Identifie la position physique des financeurs derrière des outils de chiffrement ou des VPN.
+ * Saisie souveraine : Transforme une capacité de surveillance en une capacité de récupération d'avoirs au profit du Trésor Public.
+ * Discipline de feu numérique : L'asservissement aux clés PKI garantit que la saisie est couverte par la justice militaire.
+### Exemple de scénario
+ * Situation : Un coordinateur rebelle utilise un VPN et un portefeuille crypto pour transférer 50 000 $ depuis un point d'accès satellite en zone forestière.
+ * Action : Le high_scale_linker.py détecte la signature du protocole crypto. L'identity_resolver.py lie l'IP du tunnel VPN à l'IMSI du terminal satellite.
+ * Résultat : L'opérateur reçoit l'alerte de corrélation à 98%. Après validation de l'État-Major, auto_seizure.py redirige les 50 000 $ vers le compte de l'État avant que la transaction ne soit confirmée sur la blockchain.
+
+
 
