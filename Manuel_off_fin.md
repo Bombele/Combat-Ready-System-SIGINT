@@ -283,7 +283,7 @@ Ce mode constitue le "bras armé" du système. Son objectif est de lever l'anony
  * Action : Le high_scale_linker.py détecte la signature du protocole crypto. L'identity_resolver.py lie l'IP du tunnel VPN à l'IMSI du terminal satellite.
  * Résultat : L'opérateur reçoit l'alerte de corrélation à 98%. Après validation de l'État-Major, auto_seizure.py redirige les 50 000 $ vers le compte de l'État avant que la transaction ne soit confirmée sur la blockchain.
 
-​## 🛡️ Mode Saisie Mobile Money & USSD – Détail complet
+​## 🛡️Mode Saisie Mobile Money & USSD – Détail complet
 
 ​### Objectif
 
