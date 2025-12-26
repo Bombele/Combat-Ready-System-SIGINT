@@ -48,3 +48,10 @@ echo -e "\n${BLUE}==========================================================${NC
 echo -e "${GREEN}🚀 SYSTÈME CONNECTÉ AU FLUX NATIONAL${NC}"
 echo -e "Prêt pour le filtrage offensif : NationalSwitchController actif."
 echo -e "${BLUE}==========================================================${NC}"
+
+#!/bin/bash
+CERT_PATH="data/keys/state_auth.crt"
+echo "[*] Établissement du tunnel mTLS vers le Switch National..."
+# Simulation de connexion sécurisée
+nc -zv 10.0.0.1 8583 # Test du port ISO 8583
+
