@@ -310,6 +310,7 @@ Ce mode constitue le "bras armé" du système. Son objectif est de lever l'anony
 ​Résultat : L'informateur dénonce la cellule car il n'est pas payé, tandis que la cellule est débitée. L'État récupère les fonds et la source de renseignement ennemie est neutralisée.
 
 ​## 🛡️ Mode Audit et Intégrité (ChainSealer) – Détail complet
+
 ​### Objectif
 ​Le module ChainSealer est conçu pour assurer la transparence totale et l'irréversibilité des actions offensives financières. Il empêche toute corruption interne en liant chaque détournement de fonds à un identifiant d'opérateur, une autorisation de l'État-Major et un hash cryptographique unique. Il transforme le système en une "Boîte Noire" inaltérable.
 ​### Modules associés
