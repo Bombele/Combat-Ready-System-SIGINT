@@ -1,0 +1,1 @@
+echo '{"type": "GENESIS", "timestamp": '$(date +%s)', "current_hash": "0000000000000000"}' > data/audit/blackbox.log
