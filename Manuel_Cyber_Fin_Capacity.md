@@ -373,8 +373,40 @@ Le TacticalRansomware est techniquement lié au module ChainSealer. Aucun chiffr
 Le Commandant peut suivre l'efficacité de l'immobilisation via le Tableau de Bord Tactique :
  * Progression de la Paralysie : Visualisation en temps réel du nombre de fichiers verrouillés sur les serveurs cibles.
  * Gestion du Kill-Switch : Activation du bouton RESTORE uniquement après validation biométrique, permettant de transformer instantanément une infrastructure ennemie paralysée en un outil logistique pour les forces amies (FARDC).
-## 🏁 Fin du Manuel Opérationnel
-Ce manuel constitue la doctrine officielle pour l'usage des capacités numériques offensives souveraines. L'arsenal est désormais complet :
+ L'arsenal est désormais complet :
  * FINANCES : Saisie et Redirection (mitm_engine, auto_seizure).
  * INFRASTRUCTURES : Immobilisation et Neutralisation (tactical_ransom).
  * AUDIT : Traçabilité et Immuabilité (chain_sealer).
+
+
+## 🏛️ Mode Blocage Massif (National Switch Control)
+### Objectif
+Le module NationalSwitchController est l'outil de contrôle ultime. Il n'opère pas par interception discrète, mais agit comme un nœud de validation central au cœur de l'économie. Placé au niveau du commutateur national, il filtre les flux ISO 8583 en temps réel pour autoriser ou rejeter massivement les transactions selon des signatures de menace définies par l'État-Major.
+### Modules associés
+ * infra/switch/NationalSwitchController.kt : Le "cerveau" du switch. Gère la logique de filtrage, l'analyse des champs ISO 8583 (MTI, Processing Code) et la décision d'approbation ou de rejet.
+ * sigint/audit/AuditExport.kt : Module d'archivage légal. Chaque rejet est signé cryptographiquement et exporté pour garantir la traçabilité des décisions de blocage massif.
+### Mode d'Emploi Réel (Déploiement)
+#### 1. Raccordement Physique
+Pour être opérationnel, le serveur doit être placé en coupure (In-line) ou en mode Proxy entre le Switch Central (ex: Banque Centrale ou Switch monétique national) et les banques membres.
+#### 2. Sécurisation du Tunnel
+La transmission des flux financiers est protégée par une connexion TLS 1.3 avec authentification mutuelle (mTLS). Cela garantit que seules les institutions autorisées peuvent communiquer avec le contrôleur.
+#### 3. Liaison HSM & Gatekeeper
+L'activation des capacités de blocage nécessite la présence physique de la clé de l'État-Major dans le HSM (Hardware Security Module) connecté au système. Sans ce verrou matériel, le module reste en mode observation.
+### 🛡️ Sécurisation de l'Action et Fail-Safe
+#### 1. Protocole Fail-Safe (Bypass)
+Pour éviter une paralysie accidentelle de l'économie nationale, le contrôleur intègre un mode Bypass. En cas de panne logicielle ou de surcharge critique du processeur, le système laisse passer les flux sans filtrage (Fail-Open), garantissant la continuité des services financiers civils.
+#### 2. Rejet Standardisé (Code 57)
+Chaque transaction bloquée par le système renvoie un code de réponse standard ISO 8583 - Code 57 (Transaction non autorisée). Pour l'utilisateur final et la banque émettrice, le blocage apparaît comme une décision réglementaire légitime.
+#### 3. Audit Immuable
+Chaque action de rejet est automatiquement transmise au module AuditExport.kt. Ce log contient le hash de la transaction, le motif du blocage et le jeton d'autorisation du Gatekeeper, constituant une preuve irréfutable pour les audits de la Banque Centrale.
+### Valeur opérationnelle (FARDC)
+ * Contrôle de Zone Économique : Permet de couper instantanément tout flux financier entrant ou sortant d'une zone géographique sous occupation rebelle.
+ * Sanctions Instantanées : Capacité d'isoler une institution financière ou une entité spécifique du réseau national en quelques millisecondes.
+ * Souveraineté Monétaire : Assure que l'infrastructure de paiement nationale est protégée contre les manipulations étrangères.
+### Exemple de scénario
+ * Situation : Des renseignements confirment qu'une banque étrangère est utilisée pour injecter des capitaux massifs vers des réseaux de déstabilisation à l'Est du pays.
+ * Action : Le Commandant active le filtre sur le NationalSwitchController pour les transactions provenant du BIN (Bank Identification Number) concerné.
+ * Résultat : Toutes les transactions suspectes sont rejetées avec un Code 57. Le AuditExport.kt génère le dossier de preuve pour le ministère des Finances et la Justice Militaire.
+L'arsenal est désormais complet, couvrant du niveau tactique (Mobile Money) au niveau stratégique (Switch National).
+
+
