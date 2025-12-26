@@ -8,7 +8,6 @@ plugins {
 
 tasks.shadowJar {
     manifest {
-        // Assure-toi que le chemin vers MainKt est correct selon ton package
         attributes["Main-Class"] = "com.fardc.sigint.core.MainKt"
     }
 }
