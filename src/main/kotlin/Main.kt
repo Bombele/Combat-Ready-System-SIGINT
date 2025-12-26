@@ -64,3 +64,18 @@ object Main {
         }
     }
 }
+
+package com.fardc.sigint.core
+
+fun main(args: Array<String>) {
+    println("🛡️ Project Sovereign Core - Initialisation...")
+    
+    val gatekeeper = Gatekeeper()
+    if (gatekeeper.verifyStateAuth()) {
+        println("✅ Authentification État-Major validée.")
+        val bridge = OffensiveBridge()
+        bridge.startFinancialInterception()
+    } else {
+        println("❌ Échec de l'authentification. Système verrouillé.")
+    }
+}
