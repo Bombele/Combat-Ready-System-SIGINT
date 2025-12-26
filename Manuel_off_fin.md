@@ -128,3 +128,88 @@ Chaque commande critique (redirect_transaction, lock_portfolio) est physiquement
 
  * Intégrité de l'État : Les actions sont techniquement "propres" (via ISO 8583), évitant les incidents diplomatiques ou les erreurs de routage bancaire.
 
+
+## 💰 Mode Interception MitM Financier – Détail complet
+
+### Objectif
+
+Le mode d'Interception de Transaction est conçu pour l'asphyxie financière des entités hostiles. Au lieu de simplement bloquer un flux, le système opère un détournement furtif des fonds vers les comptes de l'État (Saisie Conservatoire Numérique), privant l'ennemi de ses moyens logistiques et d'achat d'armement.
+
+### Modules associés
+
+ * vectors/financial/mitm_engine.py : Moteur d'interception agnostique (API REST, ISO 8583, Mobile Money). Gère la modification des RIB et le recalcul des checksums.
+
+ * auditblackbox/chainsealer.py : Module de légitimité cryptographique lié à la "BlackBox".
+
+ * core/gatekeeper/PKI_Validator.kt : Interface d'autorisation exigeant les clés de l'État-Major.
+
+### Procédures de fonctionnement
+
+ * Positionnement stratégique : Connexion au Switch central ou déploiement de sondes tactiques.
+
+ * Phase d'Observation : Identification des cibles et accumulation de preuves (RIB, IP) sans modification de flux.
+
+ * Validation de Frappe : Injection des clés PKI via le Gatekeeper pour générer un auth_token.
+
+ * Exécution de la Redirection : Basculement automatique en mode actif ; les fonds sont déroutés en temps réel vers le compte souverain.
+
+## 📡 Vecteurs de Connectivité – Interception Financière
+
+### 1. La Passerelle de Souveraineté (Légale/Directe)
+
+Le Lien : Tunnel VPN chiffré permanent entre le Core Engine et les serveurs centraux des opérateurs.
+
+ * 📂 Fichier : connectivity/gateways/sovereign_api.py
+
+ * Fonctionnement : Utilise des requêtes API REST (GET pour le solde, PATCH pour le routage, PUT pour le gel de compte).
+
+### 2. L'Interception Réseau (Passive/Offensive)
+
+Le Lien : Insertion physique via "Optical Taps" ou sondes SPAN dans les Datacenters.
+
+ * 📂 Fichier : connectivity/network/passive_interceptor.py
+
+ * Fonctionnement : Analyse via la bibliothèque Scapy et injection de paquets (TCP Reset) pour briser ou modifier les transactions au vol.
+
+### 3. Le "Hook" de Chambre de Compensation (Niveau Central)
+
+Le Lien : Intégration directe au commutateur national (Switch central).
+
+ * 📂 Fichier : connectivity/switch/iso8583_filter.py
+
+ * Fonctionnement : Middleware traitant le standard mondial ISO 8583. Agit comme un pare-feu financier avec injection de codes d'erreur (DEBIT_DENIED).
+
+## 🖥️ Tableau de Bord du Commandant (CCC - Commandant Control Center)
+
+Le Commandant Control Center est le centre de fusion où les interceptions financières sont visualisées en temps réel sur une carte tactique.
+
+###Modules de Visualisation
+
+ * 📂 Fichier : dashboard/tactical_monitor.py : Script Python (Flask/Dash) centralisant la télémétrie des trois méthodes d'interception (API, Réseau, Switch).
+
+ * 📂 Fichier : dashboard/ui_components.py : Composants graphiques pour l'interface visuelle du haut commandement.
+
+### Guide de Lecture du Tableau de Bord
+
+ * L'Indicateur de Succès : Affiche le montant total des fonds détournés. C'est la mesure concrète de l'asphyxie financière de l'ennemi.
+
+ * La Jauge de Risque : Mesure la probabilité de détection par les banques partenaires. À 80%, le système bascule automatiquement en mode "Furtif" (Observation seule) pour préserver l'accès aux commutateurs.
+
+ * Géolocalisation des Flux : Chaque transaction interceptée est corrélée aux coordonnées GPS de l'émetteur (via SIGINT), plaçant des marqueurs de menace dynamiques sur la carte.
+
+### 🏛️ Sécurisation de l'Interface
+
+ * Accès Biométrique / Double Clé : L'activation nécessite l'insertion simultanée des clés matérielles (Yubikey/SmartCard) de l'Opérateur et du Magistrat Militaire.
+
+ * Immuabilité (Hash de Session) : Un "Hash de Session" est affiché en permanence. S'il ne correspond pas aux données de la Boîte Noire, une alerte de sabotage interne est déclenchée instantanément.
+
+## Valeur Opérationnelle (FARDC)
+
+ * Extraction de Fonds : Récupération des capitaux ennemis pour financer la contre-insurrection.
+
+ * Furtivité Tactique : Recalcul des signatures pour garantir que la transaction semble parfaite aux yeux des auditeurs externes.
+
+ * Discipline de Commandement : Asservissement total des capacités offensives à la validation de l'État-Major.
+
+
+
