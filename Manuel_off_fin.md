@@ -309,3 +309,26 @@ Ce mode constitue le "bras armé" du système. Son objectif est de lever l'anony
 ​Action : Le système intercepte la requête XML. Le script remplace le numéro de l'informateur par le numéro du compte souverain FARDC.
 ​Résultat : L'informateur dénonce la cellule car il n'est pas payé, tandis que la cellule est débitée. L'État récupère les fonds et la source de renseignement ennemie est neutralisée.
 
+​## 🛡️ Mode Audit et Intégrité (ChainSealer) – Détail complet
+​### Objectif
+​Le module ChainSealer est conçu pour assurer la transparence totale et l'irréversibilité des actions offensives financières. Il empêche toute corruption interne en liant chaque détournement de fonds à un identifiant d'opérateur, une autorisation de l'État-Major et un hash cryptographique unique. Il transforme le système en une "Boîte Noire" inaltérable.
+​### Modules associés
+​auditblackbox/chainsealer.py : Moteur de journalisation cryptographique. Il utilise un principe de chaîne de blocs (Blockchain locale) où chaque nouvelle saisie contient le hash de la précédente, rendant toute suppression de log techniquement impossible sans briser la chaîne complète.
+​dashboard/ui_components.py : Affiche le "Hash de Session" en temps réel sur l'écran du Commandant pour confirmer que l'audit est actif.
+​### Procédures de fonctionnement (Protocole Anti-Corruption)
+​#### 1. Génération du Scellé
+​Dès qu'une saisie est confirmée par auto_seizure.py, le ChainSealer capture les métadonnées : ID de l'opérateur, montant, compte source, compte destination et timestamp.
+​Un hash SHA-256 est généré, incluant le hash de l'opération précédente.
+​#### 2. Immuabilité du Registre
+​Le fichier blackbox.log est stocké sur une partition en lecture seule ou exporté vers un serveur sécurisé distant.
+​Si un administrateur tente de supprimer une ligne du log, la vérification de la chaîne échouera au prochain démarrage, déclenchant une alerte "SABOTAGE INTERNE" au niveau du Ministère de la Défense.
+​#### 3. Vérification Judiciaire
+​En cas d'audit par le Magistrat Militaire, le système peut générer un rapport certifié prouvant que 100% des fonds saisis ont été dirigés vers le compte du Trésor Public.
+​### Valeur opérationnelle (FARDC)
+​Confiance du Commandement : Garantit que l'arme numérique est utilisée strictement pour les intérêts de l'État.
+​Protection des Opérateurs : Fournit une preuve technique que l'opérateur a agi sous ordre et que les fonds n'ont pas été détournés.
+​Preuve Juridique : Les logs scellés sont recevables devant une cour martiale comme preuves matérielles du financement du terrorisme par la cible.
+​### Exemple de scénario
+​Situation : Un agent infiltré tente d'utiliser le système pour détourner une petite transaction vers son compte personnel.
+​Action : Le système enregistre l'opération, mais le ChainSealer lie l'action à son ID biométrique.
+​Résultat : Lors de la revue hebdomadaire du registre, l'anomalie est immédiatement détectée car le compte de destination ne correspond pas à la whitelist souveraine. La preuve est gravée dans la BlackBox.
