@@ -1,21 +1,20 @@
+import zmq
 import redis
-import time
 
 class IdentityResolver:
-    """
-    Base de données ultra-rapide (In-Memory) reliant les IMSI aux IP assignées.
-    Alimenté par les logs DHCP des opérateurs ou l'interception GGSN/PGW.
-    """
     def __init__(self):
-        # Utilisation de Redis pour une réponse en micro-secondes
-        self.db = redis.Redis(host='localhost', port=6379, db=0)
+        self.r = redis.Redis(host='localhost', port=6379, db=0)
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.SUB)
+        self.socket.connect("tcp://10.10.0.5:5555") # IP de la sonde SIGINT
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
 
-    def update_mapping(self, ip, imsi, gps_coords):
-        """Met à jour le lien lors d'une nouvelle session data"""
-        data = {"imsi": imsi, "gps": gps_coords, "last_seen": time.time()}
-        self.db.set(ip, json.dumps(data), ex=3600)  # Expiration après 1h d'inactivité
+    def listen_and_map(self):
+        print("[SIGINT] Mapping IP/IMSI opérationnel...")
+        while True:
+            msg = self.socket.recv_json()
+            # On lie l'IP locale à l'IMSI capturé sur l'antenne relais
+            self.r.set(msg['ip'], msg['imsi'], ex=3600) 
 
-    def resolve(self, ip):
-        """Récupère l'identité physique à partir de l'IP"""
-        res = self.db.get(ip)
-        return json.loads(res) if res else None
+    def get_identity(self, ip):
+        return self.r.get(ip)
