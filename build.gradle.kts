@@ -37,3 +37,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict") // Renforce la vérification du Null-Safety
     }
 }
+
+tasks.register<Exec>("cyberOffensiveTest") {
+    group = "verification"
+    description = "Lance un test de résilience réseau (Stress Test)."
+    
+    // Exemple d'appel à un script externe ou commande système
+    commandLine("bash", "-c", "hping3 -S -p 80 --flood --rand-source localhost -c 100")
+    
+    doLast {
+        println("ℹ️ Test de flood terminé. Vérification des logs de survie du système...")
+    }
+}
