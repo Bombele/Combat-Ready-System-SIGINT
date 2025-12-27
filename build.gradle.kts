@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.8.20"
+    // Versions verrouillées pour la stabilité sur Codespace
+    kotlin("jvm") version "1.8.20" 
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -19,6 +20,7 @@ tasks.shadowJar {
     archiveBaseName.set("sigint-core")
     archiveClassifier.set("all")
     manifest {
+        // Point d'entrée vers la classe principale compilée
         attributes["Main-Class"] = "com.fardc.sigint.core.MainKt"
     }
 }
