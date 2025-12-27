@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.fardc.sigint"
-version = "1.0"
+version = "1.0-OFFICIAL"
 
 repositories {
     mavenCentral()
