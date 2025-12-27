@@ -1,11 +1,15 @@
+# 1. Suppression de la version incomplète du script
+rm -f fix_all.sh
+
+# 2. Création de la version opérationnelle
 cat << 'EOF' > fix_all.sh
 #!/bin/bash
-echo "🚀 Démarrage de la réparation souveraine..."
+echo "🚀 Démarrage de la reconstruction souveraine..."
 
-# 1. Nettoyage radical
+# Nettoyage des conflits
 rm -rf .gradle build gradlew gradle/ settings.gradle.kts build.gradle.kts
 
-# 2. Création des fichiers de configuration stabilisés
+# Configuration du noyau
 echo 'rootProject.name = "SOVEREIGN-CORE-PSC"' > settings.gradle.kts
 
 cat << 'EOG' > build.gradle.kts
@@ -25,20 +29,19 @@ tasks.shadowJar {
 }
 EOG
 
-# 3. Téléchargement direct du binaire Gradle 8.2 (pour contourner la version 9.2.1)
-echo "📥 Téléchargement de Gradle 8.2..."
+# Téléchargement forcé de Gradle 8.2 pour briser le cycle Gradle 9
+echo "📥 Acquisition du moteur Gradle 8.2..."
 wget https://services.gradle.org/distributions/gradle-8.2-bin.zip -P /tmp
-unzip -d /tmp /tmp/gradle-8.2-bin.zip
+unzip -o -d /tmp /tmp/gradle-8.2-bin.zip
 
-# 4. Utilisation du Gradle 8.2 téléchargé pour créer le wrapper local
+# Initialisation du Wrapper local
 /tmp/gradle-8.2/bin/gradle wrapper --gradle-version 8.2
 
-# 5. Finalisation
+# Lancement de la compilation avec isolation totale
 chmod +x gradlew
-echo "✅ Système réparé. Lancement de la compilation..."
-./gradlew shadowJar --no-daemon
+./gradlew shadowJar --no-daemon -Porg.gradle.java.installations.auto-detect=false
 EOF
 
-# Lancement du script
+# 3. Lancement du processus
 chmod +x fix_all.sh
 ./fix_all.sh
